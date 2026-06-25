@@ -5,8 +5,8 @@ export const firma = {
   opis: "Wynajem dmuchańców i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce.",
 
   telefon: {
-    display: "534 959 700",
-    e164: "+48534959700", // format do linków tel:
+    display: "123 456 789", // TODO: podmień na prawdziwy numer (mock)
+    e164: "+48123456789", // format do linków tel:
   },
 
   email: "", // puste = ukryty
