@@ -1,13 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="zaSKOKI">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FF7A1A"/>
-      <stop offset="1" stop-color="#FFC436"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <g transform="translate(8 8) scale(2)" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">
-    <path d="M4 21V12a8 8 0 0 1 16 0v9"/>
-    <path d="M9 21v-5M15 21v-5M4 16h16"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="zaSKOKI">
+  <rect width="512" height="512" rx="116" fill="#FF7A1A"/>
+  <g fill="#ffffff" font-family="'Baloo 2','Trebuchet MS',Verdana,system-ui,sans-serif" font-weight="800" text-anchor="middle">
+    <text x="256" y="226" font-size="150" letter-spacing="-3">za</text>
+    <text x="256" y="392" font-size="138" letter-spacing="-5">SKOKI</text>
   </g>
 </svg>

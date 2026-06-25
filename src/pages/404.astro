@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { firma } from '../data/firma';
 ---
 
-<Layout title={`Nie znaleziono strony — ${firma.nazwa}`} description="Ups! Tej strony nie ma.">
+<Layout title={`Nie znaleziono strony — ${firma.nazwa}`} description="Ups! Tej strony nie ma." noindex>
   <main class="nf">
     <div class="container nf__inner">
       <p class="nf__code">404</p>

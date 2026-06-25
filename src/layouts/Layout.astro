@@ -10,12 +10,14 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
 }
 
 const {
   title = `${firma.nazwa} — wynajem dmuchańców na imprezy | ${firma.region}`,
   description = 'Wynajem dmuchanych zjeżdżalni i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce. Przywozimy, montujemy i odbieramy — Ty się tylko bawisz. Zadzwoń: 534 959 700.',
   image = '/og-image.jpg',
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -57,12 +59,15 @@ const jsonLd = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
     <meta name="theme-color" content="#FF7A1A" />
     <meta name="author" content={firma.nazwa} />
 
