@@ -14,7 +14,6 @@ porcją JavaScriptu.
 6. [Kontakt](#kontakt)
 7. [SEO](#seo)
 8. [Deploy na Cloudflare Pages](#deploy-na-cloudflare-pages)
-9. [Wynik Lighthouse](#wynik-lighthouse)
 
 ---
 

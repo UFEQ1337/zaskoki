@@ -1,0 +1,10 @@
+{
+  // Konfiguracja Cloudflare Workers (Static Assets) — serwuje statyczny build z folderu dist.
+  "name": "zaskoki",
+  "compatibility_date": "2025-06-01",
+  "assets": {
+    "directory": "./dist",
+    // Nieznany adres => serwuj naszą stronę 404 (ze statusem 404).
+    "not_found_handling": "404-page"
+  }
+}
