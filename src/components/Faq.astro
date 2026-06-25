@@ -1,0 +1,99 @@
+---
+import { faq } from '../data/faq';
+
+// Dane strukturalne FAQ (mogą dać rozwijane pytania w wynikach Google).
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.pytanie,
+    acceptedAnswer: { '@type': 'Answer', text: f.odpowiedz },
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+<section id="faq" class="section faq">
+  <div class="container faq__inner">
+    <div class="faq__head" data-reveal>
+      <span class="eyebrow">FAQ</span>
+      <h2 class="section-title">Najczęstsze pytania</h2>
+    </div>
+
+    <div class="faq__list" data-reveal>
+      {
+        faq.map((f, i) => (
+          <details class="faq__item" name="faq" open={i === 0}>
+            <summary class="faq__q">
+              <span>{f.pytanie}</span>
+              <span class="faq__chev" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF7A1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+              </span>
+            </summary>
+            <div class="faq__a">{f.odpowiedz}</div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { background: var(--c-cream); }
+  .faq__inner { max-width: 780px; }
+  .faq__head {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .faq__item {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(42, 35, 66, 0.06);
+    border: 1px solid rgba(42, 35, 66, 0.05);
+  }
+  .faq__q {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    padding: 20px 22px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(16px, 2.5vw, 19px);
+    color: var(--c-ink);
+  }
+  /* Ukrycie domyślnego znacznika <summary> w różnych przeglądarkach */
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::marker { content: ''; }
+
+  .faq__chev {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--c-peach);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+  .faq__item[open] .faq__chev { transform: rotate(180deg); }
+
+  .faq__a {
+    padding: 0 22px 22px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--c-gray);
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+import { Image } from 'astro:assets';
+import { firma } from '../data/firma';
+import lifeFoam from '../assets/zycie/life-foam.jpg';
+import lifeCandy from '../assets/zycie/life-candy.jpg';
+import lifeRainbow from '../assets/zycie/life-rainbow.jpg';
+
+const galeria = [
+  { src: lifeFoam, alt: 'Dzieci bawiące się na imprezie plenerowej' },
+  { src: lifeCandy, alt: 'Uśmiechnięte dziecko na pikniku' },
+  { src: lifeRainbow, alt: 'Radosne dziecko podczas zabawy' },
+];
+---
+
+<section id="o-nas" class="section onas">
+  <div class="container onas__inner">
+    <div data-reveal>
+      <span class="eyebrow">O nas</span>
+      <h2 class="section-title">
+        Robimy z każdej imprezy <span class="accent">prawdziwą frajdę</span>
+      </h2>
+      <p class="onas__lead">
+        {firma.nazwa} to lokalna firma z czystymi, regularnie serwisowanymi dmuchańcami i grami
+        plenerowymi. Przywozimy, rozkładamy i odbieramy sprzęt, a Ty zajmujesz się tylko zabawą.
+        Działamy na terenie Wielkopolski:
+      </p>
+    </div>
+
+    <ul class="onas__towns" data-reveal>
+      {
+        firma.miejscowosci.map((m) => (
+          <li class="pill">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A1A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+            {m}
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="onas__gallery" data-reveal>
+      {
+        galeria.map((g) => (
+          <div class="onas__shot">
+            <Image src={g.src} alt={g.alt} widths={[260, 360, 480]} sizes="(max-width: 720px) 90vw, 300px" loading="lazy" />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .onas { background: #fff; }
+  .onas__inner {
+    max-width: 980px;
+    text-align: center;
+  }
+  .onas__lead {
+    font-size: clamp(16px, 2.2vw, 19px);
+    line-height: 1.6;
+    color: var(--c-gray);
+    max-width: 680px;
+    margin: 18px auto 0;
+  }
+
+  .onas__towns {
+    list-style: none;
+    margin: 30px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .onas__towns .pill {
+    font-size: 15px;
+    padding: 11px 18px;
+    border: 1px solid rgba(255, 122, 26, 0.18);
+  }
+
+  .onas__gallery {
+    margin-top: 38px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .onas__shot {
+    aspect-ratio: 5 / 4;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+  .onas__shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

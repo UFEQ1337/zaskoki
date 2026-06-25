@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import ONas from '../components/ONas.astro';
+import Oferta from '../components/Oferta.astro';
+import Bezpieczenstwo from '../components/Bezpieczenstwo.astro';
+import Faq from '../components/Faq.astro';
+import Kontakt from '../components/Kontakt.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <Header />
+  <main id="tresc">
+    <Hero />
+    <ONas />
+    <Oferta />
+    <Bezpieczenstwo />
+    <Faq />
+    <Kontakt />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  // Animacje pojawiania (IntersectionObserver → klasa .is-visible). Szanuje prefers-reduced-motion.
+  function initReveal() {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (!els.length) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (el: Element) => el.classList.add('is-visible');
+
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(show);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            show(entry.target);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -7% 0px' }
+    );
+
+    els.forEach((el) => {
+      if (!el.classList.contains('is-visible')) io.observe(el);
+    });
+
+    // Bezpiecznik: gdyby obserwator nie zadziałał, po 2.2 s pokaż wszystko.
+    window.setTimeout(() => els.forEach(show), 2200);
+  }
+
+  initReveal();
+  document.addEventListener('astro:page-load', initReveal);
+</script>

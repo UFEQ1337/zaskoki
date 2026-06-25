@@ -1,0 +1,11 @@
+# Normalizacja końców linii — spójność między Windows/macOS/Linux.
+* text=auto eol=lf
+
+# Pliki binarne (bez konwersji).
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.avif binary
+*.woff2 binary
+*.ico binary

@@ -1,0 +1,173 @@
+---
+import { firma } from '../data/firma';
+
+const linki = [
+  { href: '#o-nas', label: 'O nas' },
+  { href: '#oferta', label: 'Oferta' },
+  { href: '#faq', label: 'FAQ' },
+  { href: '#kontakt', label: 'Kontakt' },
+];
+---
+
+<header class="hdr" id="gora">
+  <div class="container hdr__inner">
+    <a href="#gora" class="logo" aria-label={`${firma.nazwa}.pl — strona główna`}>
+      <span class="logo__text"><span class="logo__za">za</span><span class="logo__skoki">SKOKI</span><span class="logo__tld">.pl</span></span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Menu główne">
+      {linki.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="hdr__actions">
+      <a href={`tel:${firma.telefon.e164}`} class="hdr__phone">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <span>{firma.telefon.display}</span>
+      </a>
+      <button class="burger" aria-label="Otwórz menu" aria-expanded="false" aria-controls="menu-mobilne">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF7A1A" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-mobile" id="menu-mobilne" aria-label="Menu mobilne" hidden>
+    {linki.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid rgba(42, 35, 66, 0.07);
+  }
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 12px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo__text {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 25px;
+    letter-spacing: -0.5px;
+  }
+  .logo__za { color: var(--c-ink); }
+  .logo__skoki { color: var(--c-orange); }
+  .logo__tld { color: var(--c-ink); }
+
+  .nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  .nav-desktop a {
+    text-decoration: none;
+    color: var(--c-ink);
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+  .nav-desktop a:hover { color: var(--c-orange); }
+
+  .hdr__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hdr__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--c-orange);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: clamp(13px, 2.4vw, 16px);
+    padding: 11px clamp(14px, 2.6vw, 20px);
+    border-radius: 999px;
+    box-shadow: 0 10px 22px rgba(255, 122, 26, 0.34);
+    white-space: nowrap;
+    transition: transform 0.18s ease;
+  }
+  .hdr__phone:hover { transform: translateY(-2px); }
+
+  .burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 13px;
+    background: var(--c-peach);
+    cursor: pointer;
+  }
+
+  .nav-mobile {
+    border-top: 1px solid rgba(42, 35, 66, 0.07);
+    background: #fff;
+    padding: 8px var(--gutter) 18px;
+    flex-direction: column;
+    gap: 4px;
+  }
+  /* Atrybut [hidden] musi wygrać — pokazujemy menu tylko, gdy jest otwarte. */
+  .nav-mobile:not([hidden]) {
+    display: flex;
+  }
+  .nav-mobile a {
+    text-decoration: none;
+    color: var(--c-ink);
+    font-weight: 700;
+    font-size: 17px;
+    padding: 12px 6px;
+    border-radius: 8px;
+  }
+  .nav-mobile a:hover { background: var(--c-cream); }
+
+  /* Przełączenie desktop/mobile przy 800px (jak w projekcie). */
+  @media (max-width: 800px) {
+    .nav-desktop { display: none; }
+    .burger { display: inline-flex; }
+  }
+  @media (min-width: 801px) {
+    .nav-mobile { display: none !important; }
+  }
+</style>
+
+<script>
+  function initMenu() {
+    const burger = document.querySelector<HTMLButtonElement>('.burger');
+    const menu = document.getElementById('menu-mobilne');
+    if (!burger || !menu || burger.dataset.bound === '1') return;
+    burger.dataset.bound = '1';
+
+    const setOpen = (open: boolean) => {
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
+      menu.hidden = !open;
+    };
+    burger.addEventListener('click', () => {
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+  initMenu();
+  document.addEventListener('astro:page-load', initMenu);
+</script>

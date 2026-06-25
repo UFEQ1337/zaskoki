@@ -1,0 +1,229 @@
+---
+import { dmuchance } from '../data/dmuchance';
+import { firma } from '../data/firma';
+import KartaDmuchanca from './KartaDmuchanca.astro';
+---
+
+<section id="oferta" class="section oferta">
+  <div class="container">
+    <div class="oferta__head" data-reveal>
+      <span class="eyebrow">Oferta</span>
+      <h2 class="section-title">Nasze atrakcje</h2>
+      <p class="oferta__sub">Kliknij zdjęcie, aby zobaczyć galerię.</p>
+    </div>
+
+    <div class="oferta__promo" data-reveal>
+      <div class="oferta__promo-box">
+        <span class="oferta__promo-badge">{firma.rabat.wartosc}</span>
+        <span class="oferta__promo-text">{firma.rabat.haslo}</span>
+      </div>
+    </div>
+
+    <div class="oferta__grid">
+      {dmuchance.map((d) => <KartaDmuchanca dmuchaniec={d} />)}
+    </div>
+
+    <p class="oferta__note" data-reveal>
+      Ceny od {firma.cenaOd} do {firma.cenaDo} zł / dzień. Dokładną wycenę i dostępność
+      potwierdzamy telefonicznie.
+    </p>
+  </div>
+</section>
+
+<style>
+  .oferta { background: var(--c-cream); }
+  .oferta__head {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .oferta__head .section-title { margin-bottom: 8px; }
+  .oferta__sub {
+    font-size: clamp(16px, 2.2vw, 18px);
+    color: var(--c-gray);
+    margin: 0;
+  }
+
+  .oferta__promo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: clamp(26px, 4vw, 40px);
+  }
+  .oferta__promo-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 2px dashed var(--c-yellow);
+    padding: 14px 22px;
+    border-radius: 999px;
+  }
+  .oferta__promo-badge {
+    background: var(--c-orange);
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 16px;
+    padding: 6px 13px;
+    border-radius: 999px;
+  }
+  .oferta__promo-text {
+    font-weight: 800;
+    font-size: clamp(14px, 2.4vw, 16px);
+    color: var(--c-ink);
+  }
+
+  .oferta__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+    gap: clamp(20px, 3vw, 26px);
+  }
+
+  .oferta__note {
+    text-align: center;
+    font-size: 14.5px;
+    color: var(--c-gray);
+    margin: clamp(26px, 4vw, 38px) auto 0;
+    max-width: 560px;
+  }
+</style>
+
+<!-- Style Swipera/GLightboxa — klasy generowane dynamicznie, więc globalne. -->
+<style is:global>
+  /* Przed inicjalizacją Swipera pokazujemy tylko okładkę. */
+  .karta__carousel:not(.swiper-initialized) .swiper-slide:not(:first-child) {
+    display: none;
+  }
+  .karta__carousel:not(.swiper-initialized) .swiper-pagination,
+  .karta__carousel:not(.swiper-initialized) .karta__nav {
+    display: none;
+  }
+
+  .karta__carousel .swiper-pagination {
+    position: absolute;
+    bottom: 8px;
+    z-index: 2;
+    pointer-events: auto;
+  }
+  .karta__carousel .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.75;
+    width: 7px;
+    height: 7px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+  .karta__carousel .swiper-pagination-bullet-active {
+    background: var(--c-orange);
+    opacity: 1;
+    width: 18px;
+    border-radius: 4px;
+  }
+
+  .glightbox-clean .gnext svg,
+  .glightbox-clean .gprev svg,
+  .glightbox-clean .gclose svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Mobile: GLightbox domyślnie chowa strzałki (zostaje sam swipe). Pokazujemy je jako pewny fallback. */
+  @media (max-width: 768px) {
+    .glightbox-container .gprev,
+    .glightbox-container .gnext {
+      position: fixed !important;
+      top: 50% !important;
+      bottom: auto !important;
+      transform: translateY(-50%) !important;
+      width: 46px !important;
+      height: 46px !important;
+      background: rgba(20, 15, 32, 0.55) !important;
+      border-radius: 50% !important;
+      z-index: 100000 !important;
+    }
+    .glightbox-container .gprev {
+      left: 12px !important;
+      right: auto !important;
+    }
+    .glightbox-container .gnext {
+      right: 12px !important;
+      left: auto !important;
+    }
+  }
+</style>
+
+<script>
+  // Ciężki JS (Swiper + GLightbox) ładowany leniwie — dopiero przy sekcji „Oferta".
+  import 'swiper/css';
+  import 'swiper/css/pagination';
+  import 'glightbox/dist/css/glightbox.min.css';
+
+  let booted = false;
+
+  async function bootOferta() {
+    if (booted) return;
+    booted = true;
+
+    const [{ default: Swiper }, mods, glx] = await Promise.all([
+      import('swiper'),
+      import('swiper/modules'),
+      import('glightbox'),
+    ]);
+    const { Pagination, Navigation, A11y, Keyboard } = mods;
+    const GLightbox = glx.default;
+
+    document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((el) => {
+      if (el.dataset.swiperBound === '1') return;
+      el.dataset.swiperBound = '1';
+      const slides = el.querySelectorAll('.swiper-slide').length;
+      new Swiper(el, {
+        modules: [Pagination, Navigation, A11y, Keyboard],
+        loop: slides > 1,
+        speed: 450,
+        keyboard: { enabled: true, onlyInViewport: true },
+        pagination: { el: el.querySelector<HTMLElement>('[data-pagination]'), clickable: true },
+        navigation: {
+          prevEl: el.querySelector<HTMLElement>('.karta__nav--prev'),
+          nextEl: el.querySelector<HTMLElement>('.karta__nav--next'),
+        },
+        a11y: {
+          prevSlideMessage: 'Poprzednie zdjęcie',
+          nextSlideMessage: 'Następne zdjęcie',
+          paginationBulletMessage: 'Przejdź do zdjęcia {{index}}',
+        },
+      });
+    });
+
+    GLightbox({
+      selector: '.glightbox',
+      loop: true,
+      touchNavigation: true,
+      zoomable: false, // bez zoomu zdjęcia => płynne przesuwanie palcem między zdjęciami na mobile
+      openEffect: 'fade',
+      closeEffect: 'fade',
+    });
+  }
+
+  function watchOferta() {
+    const section = document.getElementById('oferta');
+    if (!section) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              obs.disconnect();
+              bootOferta();
+            }
+          }
+        },
+        { rootMargin: '300px 0px' }
+      );
+      io.observe(section);
+    } else {
+      bootOferta();
+    }
+  }
+
+  watchOferta();
+  document.addEventListener('astro:page-load', watchOferta);
+</script>

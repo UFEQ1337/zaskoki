@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { firma } from '../data/firma';
+---
+
+<Layout title={`Nie znaleziono strony — ${firma.nazwa}`} description="Ups! Tej strony nie ma.">
+  <main class="nf">
+    <div class="container nf__inner">
+      <p class="nf__code">404</p>
+      <h1 class="nf__title">Ups! Tu nic nie ma</h1>
+      <p class="nf__lead">Ta strona zjechała na dmuchańcu w nieznane. Wróćmy na stronę główną.</p>
+      <a href="/" class="btn btn--primary">Wróć na stronę główną</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .nf {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--c-cream) 0%, #fff 100%);
+    text-align: center;
+  }
+  .nf__inner {
+    max-width: 520px;
+    padding-block: clamp(48px, 10vw, 96px);
+  }
+  .nf__code {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(72px, 18vw, 130px);
+    line-height: 1;
+    color: var(--c-orange);
+    margin: 0;
+  }
+  .nf__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(26px, 5vw, 40px);
+    margin: 6px 0 12px;
+  }
+  .nf__lead {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--c-gray);
+    margin: 0 0 28px;
+  }
+</style>

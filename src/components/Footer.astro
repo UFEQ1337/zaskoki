@@ -1,0 +1,177 @@
+---
+import { firma } from '../data/firma';
+
+const rok = new Date().getFullYear();
+const linki = [
+  { href: '#o-nas', label: 'O nas' },
+  { href: '#oferta', label: 'Oferta' },
+  { href: '#faq', label: 'FAQ' },
+  { href: '#kontakt', label: 'Kontakt' },
+];
+---
+
+<footer class="stopka">
+  <div class="container stopka__grid">
+    <div class="stopka__brand">
+      <div class="stopka__logo">
+        <span class="stopka__name"><span>za</span><span class="stopka__name-accent">SKOKI</span><span>.pl</span></span>
+      </div>
+      <p class="stopka__desc">{firma.opis}</p>
+
+      {
+        (firma.social.facebook || firma.social.instagram) && (
+          <div class="stopka__social">
+            {firma.social.facebook && (
+              <a href={firma.social.facebook} class="stopka__soc" aria-label="Facebook" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+              </a>
+            )}
+            {firma.social.instagram && (
+              <a href={firma.social.instagram} class="stopka__soc" aria-label="Instagram" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+
+    <nav class="stopka__col" aria-label="Menu w stopce">
+      <h2 class="stopka__h">Menu</h2>
+      <div class="stopka__links">
+        {linki.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </nav>
+
+    <div class="stopka__col">
+      <h2 class="stopka__h">Kontakt</h2>
+      <a href={`tel:${firma.telefon.e164}`} class="stopka__phone">{firma.telefon.display}</a>
+      {firma.email && <a href={`mailto:${firma.email}`} class="stopka__email">{firma.email}</a>}
+      <p class="stopka__towns">{firma.miejscowosci.join(' · ')}</p>
+    </div>
+  </div>
+
+  <div class="container stopka__bottom">
+    © {rok} {firma.nazwa} · Wynajem dmuchańców w Wielkopolsce
+  </div>
+</footer>
+
+<style>
+  .stopka {
+    background: var(--c-ink);
+    color: #fff;
+    padding: clamp(40px, 6vw, 60px) 0 30px;
+  }
+  .stopka__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .stopka__brand { flex: 1 1 240px; }
+  .stopka__col { flex: 1 1 180px; }
+
+  .stopka__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .stopka__name {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+  }
+  .stopka__name-accent { color: var(--c-yellow); }
+
+  .stopka__desc {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 280px;
+  }
+
+  .stopka__social {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .stopka__soc {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+  .stopka__soc:hover {
+    background: var(--c-orange);
+    transform: translateY(-2px);
+  }
+  .stopka__soc svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stopka__h {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 14px;
+  }
+  .stopka__links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stopka__links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 15px;
+    width: fit-content;
+  }
+  .stopka__links a:hover { color: #fff; }
+
+  .stopka__phone {
+    display: block;
+    color: var(--c-yellow);
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+    margin-bottom: 8px;
+    width: fit-content;
+  }
+  .stopka__email {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 15px;
+    margin-bottom: 10px;
+    width: fit-content;
+  }
+  .stopka__email:hover { color: #fff; }
+
+  .stopka__towns {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .stopka__bottom {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13.5px;
+    text-align: center;
+  }
+  /* .container ma padding-inline; przy łączeniu sekcji bottom z grid trzymamy spójny układ */
+  .stopka__bottom.container { max-width: var(--maxw); }
+</style>

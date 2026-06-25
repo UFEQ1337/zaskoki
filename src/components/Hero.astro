@@ -1,0 +1,182 @@
+---
+import { Image } from 'astro:assets';
+import { firma } from '../data/firma';
+import heroImg from '../assets/dmuchance/zyziu-1.jpg';
+---
+
+<section class="hero">
+  <span class="hero__blob hero__blob--a" aria-hidden="true"></span>
+  <span class="hero__blob hero__blob--b" aria-hidden="true"></span>
+
+  <div class="container hero__grid">
+    <div class="hero__col" data-reveal>
+      <span class="hero__badge">
+        <span class="hero__dot" aria-hidden="true"></span>
+        {firma.tagline}
+      </span>
+      <h1 class="hero__title">Dmuchańce na<br /><span class="accent">każdą imprezę</span></h1>
+      <p class="hero__lead">
+        Zjeżdżalnie i gry plenerowe na urodziny, komunie, pikniki i imprezy firmowe.
+        Przywozimy, montujemy i odbieramy — Ty zajmujesz się tylko świętowaniem.
+      </p>
+      <div class="hero__cta">
+        <a href="#oferta" class="btn btn--primary">
+          Zobacz nasze dmuchańce
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </a>
+        <a href={`tel:${firma.telefon.e164}`} class="btn btn--ghost">{firma.telefon.display}</a>
+      </div>
+    </div>
+
+    <div class="hero__col hero__media" data-reveal>
+      <div class="hero__frame">
+        <Image
+          src={heroImg}
+          alt="Kolorowa dmuchana zjeżdżalnia ZYZIU gotowa do zabawy na imprezie"
+          widths={[360, 480, 640, 820]}
+          sizes="(max-width: 860px) 92vw, 480px"
+          loading="eager"
+          fetchpriority="high"
+          class="hero__img"
+        />
+      </div>
+      <div class="hero__chip">
+        <span class="hero__chip-ic" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2BB89A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+        </span>
+        <span class="hero__chip-txt">Dezynfekcja<br />po każdym wynajmie</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: linear-gradient(180deg, var(--c-cream) 0%, #ffffff 100%);
+    overflow: hidden;
+  }
+  .hero__blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero__blob--a {
+    top: -90px;
+    right: -60px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle at 30% 30%, rgba(31, 169, 224, 0.16), rgba(31, 169, 224, 0));
+  }
+  .hero__blob--b {
+    bottom: -80px;
+    left: -70px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 196, 54, 0.26), rgba(255, 196, 54, 0));
+  }
+
+  .hero__grid {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(32px, 5vw, 56px);
+    padding-block: clamp(44px, 6vw, 76px);
+  }
+  .hero__col {
+    flex: 1 1 380px;
+    min-width: min(300px, 100%);
+  }
+  .hero__media { position: relative; }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--c-blue-soft);
+    color: var(--c-blue-strong);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .hero__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-blue);
+  }
+
+  .hero__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(38px, 7vw, 66px);
+    line-height: 1.03;
+    letter-spacing: -1.5px;
+    margin: 0 0 18px;
+  }
+  .hero__title .accent { color: var(--c-orange); }
+
+  .hero__lead {
+    font-size: clamp(17px, 2.4vw, 20px);
+    line-height: 1.55;
+    color: var(--c-gray);
+    max-width: 520px;
+    margin: 0 0 30px;
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .hero__frame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 28px 60px rgba(31, 169, 224, 0.28);
+  }
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__chip {
+    position: absolute;
+    left: -14px;
+    bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: #fff;
+    padding: 13px 18px;
+    border-radius: 18px;
+    box-shadow: 0 16px 30px rgba(42, 35, 66, 0.16);
+  }
+  .hero__chip-ic {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--c-mint-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .hero__chip-txt {
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.25;
+    color: var(--c-ink);
+  }
+
+  @media (max-width: 560px) {
+    .hero__chip { left: 8px; right: 8px; }
+  }
+</style>

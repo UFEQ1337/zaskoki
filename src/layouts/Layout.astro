@@ -1,0 +1,106 @@
+---
+import '@fontsource-variable/baloo-2';
+import '@fontsource-variable/nunito';
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { firma } from '../data/firma';
+import { dmuchance } from '../data/dmuchance';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = `${firma.nazwa} — wynajem dmuchańców na imprezy | ${firma.region}`,
+  description = 'Wynajem dmuchanych zjeżdżalni i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce. Przywozimy, montujemy i odbieramy — Ty się tylko bawisz. Zadzwoń: 534 959 700.',
+  image = '/og-image.jpg',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+const social = [firma.social.facebook, firma.social.instagram].filter(Boolean);
+
+// Dane strukturalne dla Google (lokalna firma + katalog atrakcji z cenami).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${Astro.site?.href}#firma`,
+  name: firma.nazwa,
+  description: firma.opis,
+  slogan: firma.tagline,
+  url: canonical,
+  telephone: firma.telefon.e164,
+  ...(firma.email ? { email: firma.email } : {}),
+  image: ogImage,
+  priceRange: `${firma.cenaOd}–${firma.cenaDo} zł`,
+  areaServed: firma.miejscowosci.map((m) => ({ '@type': 'City', name: m })),
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: firma.region,
+    addressCountry: 'PL',
+  },
+  ...(social.length ? { sameAs: social } : {}),
+  makesOffer: dmuchance.map((d) => ({
+    '@type': 'Offer',
+    priceCurrency: 'PLN',
+    price: (d.cena.match(/\d+/) ?? ['0'])[0],
+    itemOffered: { '@type': 'Service', name: `Wynajem: ${d.nazwa} — ${d.motyw}` },
+  })),
+};
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#FF7A1A" />
+    <meta name="author" content={firma.nazwa} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:site_name" content={firma.nazwa} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="zaSKOKI — wynajem dmuchańców" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <ClientRouter />
+
+    <!-- Bez JS sekcje i tak są widoczne (animacje pojawiania tylko ozdabiają). -->
+    <noscript>
+      <style>
+        [data-reveal] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body>
+    <a href="#tresc" class="skip-link">Przejdź do treści</a>
+    <slot />
+  </body>
+</html>

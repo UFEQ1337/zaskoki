@@ -1,0 +1,40 @@
+# build output
+dist/
+.output/
+
+# raporty / pliki tymczasowe
+lh-*.json
+*.cjs.tmp
+
+# narzędzia lokalne Claude Code (konfiguracja podglądu)
+.claude/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# cloudflare
+.wrangler/
+
+# original design handoff bundle z Claude Design (materiał źródłowy, nie wdrażany)
+hopsik-dmucha-ce-na-imprez/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment
+.env
+.env.production
+.env.local
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.local
