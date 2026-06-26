@@ -41,7 +41,7 @@ const galeria = [
       {
         galeria.map((g) => (
           <div class="onas__shot">
-            <Image src={g.src} alt={g.alt} widths={[260, 360, 480]} sizes="(max-width: 720px) 90vw, 300px" loading="lazy" />
+            <Image src={g.src} alt={g.alt} width={640} height={349} widths={[260, 360, 480, 640]} sizes="(max-width: 720px) 90vw, 300px" loading="lazy" />
           </div>
         ))
       }

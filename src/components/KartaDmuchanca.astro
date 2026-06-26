@@ -17,38 +17,48 @@ const galeria = `galeria-${d.id}`;
 
 <article class="karta" style={`--akcent:${d.akcent}`}>
   <div class="karta__media">
-    <div class="karta__carousel swiper" data-carousel>
-      <div class="swiper-wrapper">
+    <div class="karta__carousel" data-carousel>
+      <div class="karta__track" data-track>
         {
           d.zdjecia.map((z, i) => (
-            <div class="swiper-slide">
-              <a
-                href={duze[i].src}
-                class="glightbox karta__link"
-                data-gallery={galeria}
-                data-glightbox={`title: ${d.nazwa} — ${d.motyw}; description: ${d.wymiary} · ${d.wiek} · ${d.cena} / dzień`}
-                aria-label={`Powiększ zdjęcie: ${z.alt}`}
-              >
-                <Image
-                  src={z.src}
-                  alt={z.alt}
-                  widths={[280, 420, 560]}
-                  sizes="(max-width: 700px) 90vw, 360px"
-                  loading="lazy"
-                  class="karta__img"
-                />
-              </a>
-            </div>
+            <a
+              href={duze[i].src}
+              class="glightbox karta__slide"
+              data-gallery={galeria}
+              data-glightbox={`type: image; title: ${d.nazwa} — ${d.motyw}; description: ${d.wymiary} · ${d.wiek} · ${d.cena} / dzień`}
+              aria-label={`Powiększ zdjęcie: ${z.alt}`}
+            >
+              <Image
+                src={z.src}
+                alt={z.alt}
+                width={768}
+                height={576}
+                widths={[280, 420, 560, 768]}
+                sizes="(max-width: 700px) 90vw, 360px"
+                loading="lazy"
+                class="karta__img"
+              />
+            </a>
           ))
         }
       </div>
-      <div class="swiper-pagination" data-pagination></div>
-      <button type="button" class="karta__nav karta__nav--prev" aria-label="Poprzednie zdjęcie">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
-      </button>
-      <button type="button" class="karta__nav karta__nav--next" aria-label="Następne zdjęcie">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
-      </button>
+      {
+        d.zdjecia.length > 1 && (
+          <>
+            <div class="karta__dots" data-dots>
+              {d.zdjecia.map((_, i) => (
+                <span class="karta__dot" class:list={[{ 'is-active': i === 0 }]} data-dot={i} aria-hidden="true" />
+              ))}
+            </div>
+            <button type="button" class="karta__nav karta__nav--prev" data-prev aria-label="Poprzednie zdjęcie">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
+            <button type="button" class="karta__nav karta__nav--next" data-next aria-label="Następne zdjęcie">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
+          </>
+        )
+      }
     </div>
 
     <span class="karta__tag">{firma.rabat.badge}</span>
@@ -115,16 +125,60 @@ const galeria = `galeria-${d.id}`;
     width: 100%;
     height: 100%;
   }
-  .karta__link {
-    display: block;
+  /* Natywna karuzela na scroll-snap */
+  .karta__track {
+    display: flex;
     width: 100%;
     height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .karta__track::-webkit-scrollbar {
+    display: none;
+  }
+  .karta__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
     cursor: zoom-in;
   }
   .karta__img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* Kropki paginacji */
+  .karta__dots {
+    position: absolute;
+    bottom: 9px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    pointer-events: none;
+  }
+  .karta__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #fff;
+    opacity: 0.75;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: width 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  }
+  .karta__dot.is-active {
+    background: var(--c-orange);
+    opacity: 1;
+    width: 18px;
   }
 
   /* Odznaki na zdjęciu */
@@ -182,7 +236,6 @@ const galeria = `galeria-${d.id}`;
   .karta__nav--next { right: 10px; }
   .karta:hover .karta__nav { opacity: 1; }
   .karta__nav:focus-visible { opacity: 1; }
-  .karta__nav.swiper-button-disabled { opacity: 0 !important; }
 
   .karta__body {
     padding: 20px 22px 24px;

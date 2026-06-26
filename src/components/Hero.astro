@@ -1,8 +1,27 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { firma } from '../data/firma';
 import heroImg from '../assets/dmuchance/zyziu-1.jpg';
+
+const heroWidths = [360, 480, 640, 820];
+const heroSizes = '(max-width: 860px) 92vw, 480px';
+const heroOpt = await getImage({
+  src: heroImg,
+  width: 820,
+  height: 617,
+  widths: heroWidths,
+  sizes: heroSizes,
+  format: 'webp',
+});
 ---
+
+<link
+  rel="preload"
+  as="image"
+  imagesrcset={heroOpt.srcSet.attribute}
+  imagesizes={heroSizes}
+  fetchpriority="high"
+/>
 
 <section class="hero">
   <span class="hero__blob hero__blob--a" aria-hidden="true"></span>
@@ -33,8 +52,11 @@ import heroImg from '../assets/dmuchance/zyziu-1.jpg';
         <Image
           src={heroImg}
           alt="Kolorowa dmuchana zjeżdżalnia ZYZIU gotowa do zabawy na imprezie"
-          widths={[360, 480, 640, 820]}
-          sizes="(max-width: 860px) 92vw, 480px"
+          width={820}
+          height={617}
+          widths={heroWidths}
+          sizes={heroSizes}
+          format="webp"
           loading="eager"
           fetchpriority="high"
           class="hero__img"
