@@ -9,11 +9,12 @@ porcją JavaScriptu.
 1. [Stack](#stack)
 2. [Uruchomienie lokalne](#uruchomienie-lokalne)
 3. [Budowanie](#budowanie)
-4. [Struktura](#struktura)
-5. [Najczęstsze edycje](#najczęstsze-edycje) — treści, cennik, zdjęcia, kolory, social
-6. [Kontakt](#kontakt)
-7. [SEO](#seo)
-8. [Deploy na Cloudflare Pages](#deploy-na-cloudflare-pages)
+4. [Wydajność (Lighthouse)](#wydajność-lighthouse)
+5. [Struktura](#struktura)
+6. [Najczęstsze edycje](#najczęstsze-edycje) — treści, cennik, zdjęcia, kolory, social
+7. [Kontakt](#kontakt)
+8. [SEO](#seo)
+9. [Deploy na Cloudflare](#deploy-na-cloudflare)
 
 ---
 
@@ -23,16 +24,17 @@ porcją JavaScriptu.
 | ------------------------ | -------------------------------------------------------------------------------- |
 | Framework                | [Astro](https://astro.build) (build statyczny, TypeScript, bez frameworka UI)    |
 | Przejścia stron          | wbudowane View Transitions (`<ClientRouter />`)                                  |
-| Karuzele zdjęć w kartach | [Swiper](https://swiperjs.com) (ładowany leniwie)                                |
+| Karuzele zdjęć w kartach | natywny **scroll-snap CSS** (bez JS — niezawodne na iOS Safari)                   |
 | Podgląd zdjęć (lightbox) | [GLightbox](https://biati-digital.github.io/glightbox/) (ładowany leniwie)       |
 | Animacje pojawiania się  | natywny `IntersectionObserver` + klasy CSS                                       |
-| Optymalizacja obrazów    | `astro:assets` → WebP/AVIF, responsywne rozmiary, lazy loading                   |
-| Fonty                    | Baloo 2 + Nunito, samohostowane (`@fontsource-variable/*`, `font-display: swap`) |
+| Optymalizacja obrazów    | `astro:assets` → WebP, responsywne rozmiary, lazy loading, preload zdjęcia LCP   |
+| Fonty                    | Baloo 2 + Nunito, samohostowane (subset latin + latin-ext, `font-display: swap`) |
+| CSS                      | wstawiany inline do HTML (`inlineStylesheets: 'always'`) — zero blokad renderu    |
 | Akordeon FAQ             | natywny `<details>` — zero JS                                                    |
 | Mapa strony / robots     | `@astrojs/sitemap` + dynamiczny `robots.txt`                                     |
 
-Ciężkie biblioteki (Swiper, GLightbox) doładowują się dopiero, gdy sekcja „Oferta" zbliża
-się do ekranu — na starcie strona ładuje praktycznie sam HTML i CSS.
+GLightbox (podgląd zdjęć) doładowuje się dopiero, gdy sekcja „Oferta" zbliża się do ekranu —
+na starcie strona ładuje praktycznie sam HTML z wstawionym inline CSS, bez blokujących żądań.
 
 ---
 
@@ -56,6 +58,30 @@ npm run check      # kontrola typów (powinno być 0 błędów)
 ```
 
 Na hosting trafia zawartość `dist/`.
+
+---
+
+## Wydajność (Lighthouse)
+
+Pomiar produkcyjny (Lighthouse, mediana z kilku przebiegów):
+
+| Kategoria          | 📱 Mobile | 🖥️ Desktop |
+| ------------------ | :-------: | :--------: |
+| **Performance**    |  **92**   |  **100**   |
+| **Accessibility**  |  **100**  |  **100**   |
+| **Best Practices** |  **100**  |  **100**   |
+| **SEO**            |  **100**  |  **100**   |
+
+Core Web Vitals: **CLS 0** (zero przeskoków układu) i **TBT 0 ms** (zero blokowania wątku) na
+obu wersjach. Mobilne LCP ~3,0 s pochodzi z dławionego „wolnego 4G" w teście laboratoryjnym —
+na realnym łączu (4G/5G/WiFi) zdjęcie hero ładuje się ~1–1,5 s.
+
+Zastosowane optymalizacje: cały CSS inline (zero blokad renderu), fonty w subsecie
+latin + latin-ext, preload zdjęcia hero (element LCP), karuzela na natywnym scroll-snap
+zamiast biblioteki JS.
+
+> Test lokalnie: `npx lighthouse https://zaskoki.ufeq.workers.dev/ --view`
+> (dla wersji desktop dodaj `--preset=desktop`).
 
 ---
 
@@ -163,24 +189,47 @@ Po publikacji warto: dodać domenę do **Google Search Console** i wysłać
 
 ---
 
-## Deploy na Cloudflare Pages
+## Deploy na Cloudflare
 
-Strona jest w pełni statyczna (darmowy plan Cloudflare wystarcza).
+Strona jest w pełni statyczna i wdrażana z linii poleceń przez **Wrangler** (Cloudflare
+Workers — Static Assets; konfiguracja w `wrangler.jsonc`). Darmowy plan w zupełności wystarcza.
 
-1. Wrzuć projekt na GitHub:
-   ```bash
-   git add . && git commit -m "Aktualizacja strony" && git push
-   ```
-2. [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers & Pages** →
-   **Create application** → **Pages** → **Connect to Git** → wybierz repozytorium.
-3. Konfiguracja budowania:
-   - **Framework preset:** `Astro`
-   - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-   - W razie potrzeby zmienna `NODE_VERSION` = `22`.
-4. **Save and Deploy** → strona pojawi się pod `*.pages.dev`.
-5. Własna domena: projekt Pages → **Custom domains** → dodaj `zaskoki.pl` i ustaw DNS wg
-   instrukcji Cloudflare.
+### 1. Logowanie (tylko za pierwszym razem)
 
-Każdy `git push` na główną gałąź automatycznie przebuduje i opublikuje stronę. Plik
-`public/_headers` ustawia cache i nagłówki bezpieczeństwa (Cloudflare czyta go automatycznie).
+Zanim cokolwiek wdrożysz, musisz raz zalogować się do Cloudflare:
+
+```bash
+npx wrangler login
+```
+
+Otworzy się przeglądarka z prośbą o autoryzację konta — kliknij **Allow**. Logowanie zapamiętuje
+się na danym komputerze, więc robisz to **tylko raz** (kolejne wdrożenia go nie wymagają).
+
+> Sprawdzenie, czy jesteś zalogowany: `npx wrangler whoami`.
+
+### 2. Publikacja
+
+Po zalogowaniu wdrażasz jedną komendą (buduje stronę i wysyła `dist/` na Cloudflare):
+
+```bash
+npm run deploy
+```
+
+Równoważnie, krok po kroku:
+
+```bash
+npm run build        # zbuduj → dist/
+npx wrangler deploy  # wyślij na Cloudflare
+```
+
+Po wdrożeniu strona jest pod `https://zaskoki.<twoja-subdomena>.workers.dev`. Każda kolejna
+publikacja to po prostu ponowne `npm run deploy`.
+
+### 3. Własna domena
+
+W panelu [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers & Pages** → projekt
+**zaskoki** → **Settings → Domains & Routes** → dodaj `zaskoki.pl` (domena musi być w Twoim
+koncie Cloudflare; DNS skonfiguruje się automatycznie).
+
+Plik `public/_headers` ustawia cache i nagłówki bezpieczeństwa (Cloudflare czyta go automatycznie),
+a strona 404 jest obsługiwana zgodnie z `wrangler.jsonc`.
