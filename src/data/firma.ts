@@ -5,8 +5,8 @@ export const firma = {
   opis: "Wynajem dmuchańców i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce.",
 
   telefon: {
-    display: "123 456 789", // TODO: podmień na prawdziwy numer (mock)
-    e164: "+48123456789", // format do linków tel:
+    display: "785 616 957",
+    e164: "+48785616957", // format do linków tel:
   },
 
   email: "", // puste = ukryty
@@ -18,22 +18,35 @@ export const firma = {
   },
 
   miejscowosci: [
-    "Września",
     "Słupca",
-    "Środa Wielkopolska",
-    "Swarzędz",
-    "Gniezno",
-    "Kostrzyn",
+    "Strzałkowo",
     "Witkowo",
-    "Nekla",
+    "Gutowo",
+    "Września",
+    "Zagórów",
+    "Ciążeń",
+    "Ląd",
+    "Lądek",
+    "Sługocin",
+    "Golina",
+    "Konin",
+    "Cienin Zaborny",
+    "Cienin Kościelny",
+    "Rozalin",
+    "Budzisław Kościelny",
+    "Koszuty",
+    "Kowalewo",
   ],
 
   region: "Wielkopolska",
 
+  // Certyfikaty / dokumenty potwierdzające bezpieczeństwo dmuchańców — pokazywane na kartach i w modalu.
+  certyfikaty: ["PN-EN 14960", "Atest", "DTR", "OC"],
+
   rabat: {
     wartosc: "−20%",
     haslo: "Wypożycz 3 atrakcje i odbierz rabat −20%",
-    badge: "3× = −20%",
+    badge: "Trzeci wynajem −20%",
   },
 
   cenaOd: 400,

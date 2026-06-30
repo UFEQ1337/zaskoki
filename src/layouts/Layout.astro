@@ -1,9 +1,14 @@
 ---
 import '../styles/fonts.css';
 import '../styles/global.css';
+import { getImage } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
 import { firma } from '../data/firma';
 import { dmuchance } from '../data/dmuchance';
+import bgParty from '../assets/bg-party.jpg';
+
+// Zoptymalizowane tło strony (WebP) — nakładane na warstwę .site-bg.
+const bg = await getImage({ src: bgParty, width: 1536, format: 'webp' });
 
 interface Props {
   title?: string;
@@ -14,7 +19,7 @@ interface Props {
 
 const {
   title = `${firma.nazwa} — wynajem dmuchańców na imprezy | ${firma.region}`,
-  description = 'Wynajem dmuchanych zjeżdżalni i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce. Przywozimy, montujemy i odbieramy — Ty się tylko bawisz. Zadzwoń: 534 959 700.',
+  description = 'Wynajem dmuchanych zjeżdżalni i gier plenerowych na urodziny, komunie, pikniki i imprezy firmowe w Wielkopolsce. Przywozimy, montujemy i odbieramy — Ty się tylko bawisz. Zadzwoń: 785 616 957.',
   image = '/og-image.jpg',
   noindex = false,
 } = Astro.props;
@@ -104,6 +109,8 @@ const jsonLd = {
   </head>
 
   <body>
+    <span id="gora" aria-hidden="true"></span>
+    <div class="site-bg" aria-hidden="true" style={`background-image:url(${bg.src})`}></div>
     <a href="#tresc" class="skip-link">Przejdź do treści</a>
     <slot />
   </body>

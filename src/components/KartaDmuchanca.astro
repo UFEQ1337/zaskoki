@@ -8,69 +8,47 @@ interface Props {
 }
 const { dmuchaniec: d } = Astro.props;
 
-// Duże, zoptymalizowane wersje zdjęć do podglądu w lightboxie (GLightbox).
-const duze = await Promise.all(
-  d.zdjecia.map((z) => getImage({ src: z.src, width: 1200, format: 'webp' }))
-);
-const galeria = `galeria-${d.id}`;
+// Większa wersja zdjęcia do dymka ze szczegółami.
+const duze = await getImage({ src: d.zdjecie.src, width: 900, format: 'webp' });
 ---
 
 <article class="karta" style={`--akcent:${d.akcent}`}>
   <div class="karta__media">
-    <div class="karta__carousel" data-carousel>
-      <div class="karta__track" data-track>
-        {
-          d.zdjecia.map((z, i) => (
-            <a
-              href={duze[i].src}
-              class="glightbox karta__slide"
-              data-gallery={galeria}
-              data-glightbox={`type: image; title: ${d.nazwa} — ${d.motyw}; description: ${d.wymiary} · ${d.wiek} · ${d.cena} / dzień`}
-              aria-label={`Powiększ zdjęcie: ${z.alt}`}
-            >
-              <Image
-                src={z.src}
-                alt={z.alt}
-                width={768}
-                height={576}
-                widths={[280, 420, 560, 768]}
-                sizes="(max-width: 700px) 90vw, 360px"
-                loading="lazy"
-                class="karta__img"
-              />
-            </a>
-          ))
-        }
-      </div>
-      {
-        d.zdjecia.length > 1 && (
-          <>
-            <div class="karta__dots" data-dots>
-              {d.zdjecia.map((_, i) => (
-                <span class="karta__dot" class:list={[{ 'is-active': i === 0 }]} data-dot={i} aria-hidden="true" />
-              ))}
-            </div>
-            <button type="button" class="karta__nav karta__nav--prev" data-prev aria-label="Poprzednie zdjęcie">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
-            </button>
-            <button type="button" class="karta__nav karta__nav--next" data-next aria-label="Następne zdjęcie">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
-            </button>
-          </>
-        )
-      }
-    </div>
+    <Image
+      src={d.zdjecie.src}
+      alt={d.zdjecie.alt}
+      widths={[320, 520, 760]}
+      sizes="(max-width: 700px) 90vw, 360px"
+      loading="lazy"
+      class="karta__img"
+    />
 
-    <span class="karta__tag">{firma.rabat.badge}</span>
-    <span class="karta__count">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF7A1A" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /><line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" /></svg>
-      {d.zdjecia.length} zdj.
-    </span>
+    <div class="karta__overlay">
+      <button
+        type="button"
+        class="karta__details"
+        data-szczegoly
+        data-nazwa={d.nazwa}
+        data-motyw={d.motyw}
+        data-opis={d.opis}
+        data-cena={d.cena}
+        data-img={duze.src}
+        data-alt={d.zdjecie.alt}
+        data-params={JSON.stringify(d.parametry)}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /><line x1="11" y1="8" x2="11" y2="8.01" /><line x1="11" y1="11" x2="11" y2="14" /></svg>
+        Szczegóły
+      </button>
+    </div>
   </div>
 
   <div class="karta__body">
-    <h3 class="karta__title">{d.nazwa}</h3>
+    <h3 class="karta__title sr-only">{d.nazwa}</h3>
     <div class="karta__theme">{d.motyw}</div>
+
+    <div class="karta__certs" aria-label="Certyfikaty i dokumenty">
+      {firma.certyfikaty.map((c) => <span class="karta__cert">{c}</span>)}
+    </div>
 
     <div class="karta__pills">
       <span class="pill">
@@ -119,143 +97,85 @@ const galeria = `galeria-${d.id}`;
   .karta__media {
     position: relative;
     aspect-ratio: 4 / 3;
-    background: #eee;
-  }
-  .karta__carousel {
-    width: 100%;
-    height: 100%;
-  }
-  /* Natywna karuzela na scroll-snap */
-  .karta__track {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .karta__track::-webkit-scrollbar {
-    display: none;
-  }
-  .karta__slide {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-    cursor: zoom-in;
+    /* Bannery mają własne, jasne tło — „contain" pokazuje cały baner (też pionowy dart). */
+    background: #fff;
   }
   .karta__img {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-  }
-  /* Kropki paginacji */
-  .karta__dots {
-    position: absolute;
-    bottom: 9px;
-    left: 0;
-    right: 0;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    pointer-events: none;
-  }
-  .karta__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: #fff;
-    opacity: 0.75;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    transition: width 0.2s ease, background 0.2s ease, opacity 0.2s ease;
-  }
-  .karta__dot.is-active {
-    background: var(--c-orange);
-    opacity: 1;
-    width: 18px;
+    object-fit: contain;
   }
 
-  /* Odznaki na zdjęciu */
-  .karta__tag {
+  /* Nakładka z przyciskiem „Szczegóły" (hover / focus) */
+  .karta__overlay {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 2;
-    background: var(--c-orange);
-    color: #fff;
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 12px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    pointer-events: none;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(20, 15, 32, 0) 35%, rgba(20, 15, 32, 0.42) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
   }
-  .karta__count {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 2;
+  .karta:hover .karta__overlay,
+  .karta__overlay:focus-within {
+    opacity: 1;
+  }
+  .karta__details {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--c-ink);
-    font-weight: 800;
-    font-size: 11px;
-    padding: 6px 11px;
-    border-radius: 999px;
-    pointer-events: none;
-  }
-
-  /* Strzałki karuzeli (własne, na hover/desktop) */
-  .karta__nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
-    width: 38px;
-    height: 38px;
+    gap: 8px;
     border: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s ease, background 0.2s ease;
+    background: #fff;
+    color: var(--c-ink);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 15px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+    transform: translateY(8px);
+    transition: transform 0.25s ease;
   }
-  .karta__nav--prev { left: 10px; }
-  .karta__nav--next { right: 10px; }
-  .karta:hover .karta__nav { opacity: 1; }
-  .karta__nav:focus-visible { opacity: 1; }
+  .karta:hover .karta__details,
+  .karta__overlay:focus-within .karta__details {
+    transform: translateY(0);
+  }
+  .karta__details svg { color: var(--c-orange); }
 
   .karta__body {
-    padding: 20px 22px 24px;
+    padding: 18px 22px 24px;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
-  .karta__title {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 24px;
-    margin: 0 0 2px;
-    letter-spacing: -0.4px;
-  }
   .karta__theme {
     font-weight: 800;
     font-size: 14px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: var(--akcent, var(--c-orange));
   }
+
+  /* Certyfikaty pod zdjęciem (nie zasłaniają tekstu na bannerze) */
+  .karta__certs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .karta__cert {
+    background: var(--c-mint-soft);
+    color: var(--c-blue-strong);
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.2px;
+    padding: 4px 9px;
+    border-radius: 7px;
+  }
+
   .karta__pills {
     display: flex;
     flex-wrap: wrap;
@@ -282,8 +202,19 @@ const galeria = `galeria-${d.id}`;
     font-weight: 700;
   }
 
-  /* Dotyk: strzałki zawsze widoczne tam, gdzie nie ma hovera */
+  /* Dotyk (brak hovera): nakładka i przycisk zawsze widoczne */
   @media (hover: none) {
-    .karta__nav { opacity: 1; background: rgba(255, 255, 255, 0.8); }
+    .karta__overlay {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(20, 15, 32, 0) 60%, rgba(20, 15, 32, 0.3) 100%);
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+    .karta__details {
+      transform: none;
+      font-size: 13px;
+      padding: 9px 14px;
+    }
   }
 </style>

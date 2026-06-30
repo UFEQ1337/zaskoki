@@ -22,7 +22,7 @@ const galeria = [
       <p class="onas__lead">
         {firma.nazwa} to lokalna firma z czystymi, regularnie serwisowanymi dmuchańcami i grami
         plenerowymi. Przywozimy, rozkładamy i odbieramy sprzęt, a Ty zajmujesz się tylko zabawą.
-        Działamy na terenie Wielkopolski:
+        Działamy w Słupcy, Wrześni, Koninie i okolicznych miejscowościach Wielkopolski:
       </p>
     </div>
 
@@ -35,6 +35,7 @@ const galeria = [
           </li>
         ))
       }
+      <li class="pill onas__more">+ okolice</li>
     </ul>
 
     <div class="onas__gallery" data-reveal>
@@ -50,7 +51,7 @@ const galeria = [
 </section>
 
 <style>
-  .onas { background: #fff; }
+  .onas { background: transparent; }
   .onas__inner {
     max-width: 980px;
     text-align: center;
@@ -76,6 +77,12 @@ const galeria = [
     font-size: 15px;
     padding: 11px 18px;
     border: 1px solid rgba(255, 122, 26, 0.18);
+  }
+  .onas__towns .onas__more {
+    background: var(--c-orange);
+    color: #fff;
+    border-color: transparent;
+    font-weight: 800;
   }
 
   .onas__gallery {

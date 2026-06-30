@@ -1,18 +1,22 @@
 ---
+import { Image } from 'astro:assets';
 import { firma } from '../data/firma';
+import logo from '../assets/logo.png';
 
 const linki = [
   { href: '#o-nas', label: 'O nas' },
   { href: '#oferta', label: 'Oferta' },
+  { href: '#dodatki', label: 'Dodatki' },
+  { href: '#pakiety', label: 'Pakiety' },
   { href: '#faq', label: 'FAQ' },
   { href: '#kontakt', label: 'Kontakt' },
 ];
 ---
 
-<header class="hdr" id="gora">
+<header class="hdr">
   <div class="container hdr__inner">
     <a href="#gora" class="logo" aria-label={`${firma.nazwa}.pl — strona główna`}>
-      <span class="logo__text"><span class="logo__za">za</span><span class="logo__skoki">SKOKI</span><span class="logo__tld">.pl</span></span>
+      <Image src={logo} alt={`${firma.nazwa}.pl`} width={386} height={81} widths={[193, 290, 386]} sizes="190px" loading="eager" class="logo__img" />
     </a>
 
     <nav class="nav-desktop" aria-label="Menu główne">
@@ -56,23 +60,21 @@ const linki = [
   .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
     text-decoration: none;
   }
-  .logo__text {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 25px;
-    letter-spacing: -0.5px;
+  .logo__img {
+    display: block;
+    width: auto;
+    height: 40px;
   }
-  .logo__za { color: var(--c-ink); }
-  .logo__skoki { color: var(--c-orange); }
-  .logo__tld { color: var(--c-ink); }
+  @media (max-width: 480px) {
+    .logo__img { height: 34px; }
+  }
 
   .nav-desktop {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 24px;
   }
   .nav-desktop a {
     text-decoration: none;
@@ -139,11 +141,11 @@ const linki = [
   .nav-mobile a:hover { background: var(--c-cream); }
 
   /* Przełączenie desktop/mobile przy 800px (jak w projekcie). */
-  @media (max-width: 800px) {
+  @media (max-width: 920px) {
     .nav-desktop { display: none; }
     .burger { display: inline-flex; }
   }
-  @media (min-width: 801px) {
+  @media (min-width: 921px) {
     .nav-mobile { display: none !important; }
   }
 </style>

@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import { dodatki } from '../data/dmuchance';
+---
+
+<section id="dodatki" class="section dodatki">
+  <div class="container">
+    <div class="dodatki__head" data-reveal>
+      <span class="eyebrow">Dodatkowa oferta</span>
+      <h2 class="section-title">Słodko i z animacją</h2>
+      <p class="dodatki__sub">
+        Do dmuchańców dorzucamy popcorn, watę cukrową, slush i piana party. Łącząc atrakcje
+        w pakiet, płacisz mniej.
+      </p>
+    </div>
+
+    <div class="dodatki__grid" data-reveal>
+      {
+        dodatki.map((item) => (
+          <article class="dodatek">
+            <div class="dodatek__media">
+              {item.zdjecie ? (
+                <Image
+                  src={item.zdjecie}
+                  alt={item.alt ?? item.nazwa}
+                  width={520}
+                  height={390}
+                  widths={[240, 360, 520]}
+                  sizes="(max-width: 700px) 90vw, 320px"
+                  loading="lazy"
+                  class="dodatek__img"
+                />
+              ) : (
+                <div class="dodatek__ph" style={`background:${item.kolor}`} aria-hidden="true">
+                  <span class="dodatek__emoji">{item.emoji}</span>
+                </div>
+              )}
+              <span class="dodatek__label">{item.nazwa}</span>
+              <span class="dodatek__price">{item.cenaOd}</span>
+            </div>
+            <p class="dodatek__desc">{item.podpis}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="dodatki__note" data-reveal>
+      Ceny ustalane indywidualnie — zależnie od liczby gości i czasu trwania imprezy.
+    </p>
+  </div>
+</section>
+
+<style>
+  .dodatki { background: transparent; }
+  .dodatki__head {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .dodatki__head .section-title { margin-bottom: 8px; }
+  .dodatki__sub {
+    font-size: clamp(16px, 2.2vw, 18px);
+    color: var(--c-gray);
+    margin: 0 auto;
+    max-width: 600px;
+  }
+
+  .dodatki__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(16px, 2.6vw, 22px);
+  }
+
+  .dodatek {
+    background: #fff;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(42, 35, 66, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  }
+  .dodatek:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 44px rgba(139, 92, 246, 0.18);
+  }
+
+  .dodatek__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: #eee;
+  }
+  .dodatek__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .dodatek__ph {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dodatek__emoji {
+    font-size: clamp(54px, 10vw, 78px);
+    line-height: 1;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.18));
+  }
+
+  .dodatek__label {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 2;
+    background: rgba(20, 15, 32, 0.62);
+    color: #fff;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .dodatek__price {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+    background: var(--c-yellow);
+    color: var(--c-ink);
+    font-weight: 800;
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(255, 196, 54, 0.4);
+  }
+  .dodatek__desc {
+    margin: 0;
+    padding: 14px 16px 18px;
+    font-size: 14.5px;
+    color: var(--c-gray);
+    line-height: 1.5;
+  }
+
+  .dodatki__note {
+    text-align: center;
+    font-size: 14.5px;
+    color: var(--c-gray);
+    margin: clamp(24px, 4vw, 36px) auto 0;
+    max-width: 560px;
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+import { firma } from '../data/firma';
+
+const obsluga = [
+  { emoji: '🎪', tytul: 'Festyny i pikniki rodzinne', opis: 'Mnóstwo radości dla małych i dużych.' },
+  { emoji: '🏢', tytul: 'Eventy firmowe', opis: 'Profesjonalizm, który buduje wizerunek marki.' },
+  { emoji: '🎒', tytul: 'Imprezy szkolne i przedszkolne', opis: 'Bezpieczna i niezapomniana zabawa dla najmłodszych.' },
+  { emoji: '🤝', tytul: 'Spotkania integracyjne', opis: 'Atrakcje, które skutecznie łączą ludzi.' },
+];
+
+const atuty = [
+  { tytul: 'Elastyczność', opis: 'Dopasowujemy ofertę do Twojego budżetu i profilu gości.' },
+  { tytul: 'Doświadczenie', opis: 'Wiemy, jak porwać tłumy i zapewnić płynny przebieg imprezy.' },
+  { tytul: 'Wygoda', opis: 'Wszystko organizujesz z jednym partnerem — oszczędzasz czas i nerwy.' },
+];
+---
+
+<section id="pakiety" class="section pakiety">
+  <div class="container">
+    <div class="pakiety__head" data-reveal>
+      <span class="eyebrow">Pakiety</span>
+      <h2 class="section-title">Rozkręcimy <span class="accent">każdą imprezę</span></h2>
+      <p class="pakiety__sub">
+        Kompleksowo obsługujemy imprezy plenerowe, zamknięte i tematyczne. Dbamy o każdy detal,
+        aby uczestnicy na długo zapamiętali te chwile.
+      </p>
+    </div>
+
+    <div class="pakiety__grid" data-reveal>
+      {
+        obsluga.map((o) => (
+          <div class="pakiety__card">
+            <span class="pakiety__emoji" aria-hidden="true">{o.emoji}</span>
+            <h3 class="pakiety__card-title">{o.tytul}</h3>
+            <p class="pakiety__card-text">{o.opis}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="pakiety__banner" data-reveal>
+      <div class="pakiety__banner-main">
+        <h3 class="pakiety__banner-title">💸 W pakietach zawsze taniej</h3>
+        <p class="pakiety__banner-text">
+          Im więcej atrakcji wybierzesz, tym więcej zaoszczędzisz. Łącząc nasze flagowe atrakcje
+          — zamki dmuchane, piana party, watę cukrową, popcorn i slush — zyskujesz pełną obsługę
+          bez przepłacania.
+        </p>
+
+        <div class="pakiety__atuty">
+          {
+            atuty.map((a) => (
+              <div class="pakiety__atut">
+                <span class="pakiety__atut-ic" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                </span>
+                <div>
+                  <strong>{a.tytul}</strong>
+                  <span>{a.opis}</span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="pakiety__cta">
+        <p class="pakiety__cta-text">Przygotujemy dla Ciebie bezpłatną, niezobowiązującą wycenę.</p>
+        <a href={`tel:${firma.telefon.e164}`} class="btn btn--primary">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+          {firma.telefon.display}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pakiety { background: transparent; }
+  .pakiety__head {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .pakiety__head .section-title { margin-bottom: 8px; }
+  .pakiety__sub {
+    font-size: clamp(16px, 2.2vw, 18px);
+    color: var(--c-gray);
+    margin: 0 auto;
+    max-width: 640px;
+  }
+
+  .pakiety__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(14px, 2.4vw, 20px);
+    margin-bottom: clamp(22px, 4vw, 34px);
+  }
+  .pakiety__card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px 22px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(42, 35, 66, 0.05);
+  }
+  .pakiety__emoji {
+    font-size: 34px;
+    line-height: 1;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .pakiety__card-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 6px;
+  }
+  .pakiety__card-text {
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--c-gray);
+    line-height: 1.55;
+  }
+
+  .pakiety__banner {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(20px, 4vw, 40px);
+    align-items: center;
+    background: linear-gradient(135deg, #2a2342 0%, #4b2e6b 55%, #0c6e9c 100%);
+    color: #fff;
+    border-radius: 28px;
+    padding: clamp(26px, 4vw, 40px);
+    box-shadow: 0 26px 56px rgba(42, 35, 66, 0.28);
+  }
+  .pakiety__banner-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(22px, 3.4vw, 28px);
+    margin: 0 0 10px;
+  }
+  .pakiety__banner-text {
+    margin: 0 0 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .pakiety__atuty {
+    display: grid;
+    gap: 12px;
+  }
+  .pakiety__atut {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pakiety__atut-ic {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--c-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .pakiety__atut strong {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 16px;
+    margin-bottom: 1px;
+  }
+  .pakiety__atut span {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.45;
+  }
+
+  .pakiety__cta {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 22px;
+    padding: 26px 22px;
+  }
+  .pakiety__cta-text {
+    margin: 0 0 18px;
+    font-weight: 700;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 760px) {
+    .pakiety__banner { grid-template-columns: 1fr; }
+  }
+</style>

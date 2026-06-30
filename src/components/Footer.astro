@@ -1,10 +1,14 @@
 ---
+import { Image } from 'astro:assets';
 import { firma } from '../data/firma';
+import logo from '../assets/logo.png';
 
 const rok = new Date().getFullYear();
 const linki = [
   { href: '#o-nas', label: 'O nas' },
   { href: '#oferta', label: 'Oferta' },
+  { href: '#dodatki', label: 'Dodatki' },
+  { href: '#pakiety', label: 'Pakiety' },
   { href: '#faq', label: 'FAQ' },
   { href: '#kontakt', label: 'Kontakt' },
 ];
@@ -14,7 +18,7 @@ const linki = [
   <div class="container stopka__grid">
     <div class="stopka__brand">
       <div class="stopka__logo">
-        <span class="stopka__name"><span>za</span><span class="stopka__name-accent">SKOKI</span><span>.pl</span></span>
+        <Image src={logo} alt={`${firma.nazwa}.pl`} width={386} height={81} widths={[193, 386]} sizes="180px" loading="lazy" class="stopka__logo-img" />
       </div>
       <p class="stopka__desc">{firma.opis}</p>
 
@@ -47,7 +51,7 @@ const linki = [
       <h2 class="stopka__h">Kontakt</h2>
       <a href={`tel:${firma.telefon.e164}`} class="stopka__phone">{firma.telefon.display}</a>
       {firma.email && <a href={`mailto:${firma.email}`} class="stopka__email">{firma.email}</a>}
-      <p class="stopka__towns">{firma.miejscowosci.join(' · ')}</p>
+      <p class="stopka__towns">{firma.miejscowosci.join(' · ')} <span class="stopka__towns-more">i okolice</span></p>
     </div>
   </div>
 
@@ -75,15 +79,18 @@ const linki = [
   .stopka__logo {
     display: flex;
     align-items: center;
-    gap: 10px;
     margin-bottom: 14px;
   }
-  .stopka__name {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 22px;
+  .stopka__logo-img {
+    display: block;
+    width: auto;
+    height: 46px;
+    box-sizing: content-box;
+    /* delikatne tło, by kolorowe logo było czytelne na ciemnej stopce */
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 12px;
+    border-radius: 12px;
   }
-  .stopka__name-accent { color: var(--c-yellow); }
 
   .stopka__desc {
     color: rgba(255, 255, 255, 0.65);
@@ -162,6 +169,11 @@ const linki = [
     font-size: 14px;
     line-height: 1.6;
     margin: 0;
+  }
+  .stopka__towns-more {
+    color: var(--c-yellow);
+    font-weight: 800;
+    white-space: nowrap;
   }
 
   .stopka__bottom {

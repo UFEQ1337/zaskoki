@@ -25,4 +25,13 @@ export const faq: Pytanie[] = [
     odpowiedz:
       'Tak. Każdą atrakcję dezynfekujemy po wynajmie, regularnie serwisujemy i prawidłowo kotwimy. Zalecamy też opiekę osoby dorosłej podczas zabawy.',
   },
+  {
+    pytanie: 'Jakie normy i dokumenty mają Wasze dmuchańce?',
+    odpowiedz:
+      'Nasze dmuchańce spełniają wszystkie wymagane normy i posiadają komplet dokumentów: ' +
+      'zgodność z normą PN-EN 14960 (europejska norma bezpieczeństwa dmuchanych urządzeń do zabawy), ' +
+      'orzeczenie techniczne (atest) potwierdzające sprawność sprzętu, ' +
+      'DTR — Dokumentację Techniczno-Ruchową każdej atrakcji, ' +
+      'oraz ubezpieczenie OC. Komplet dokumentów udostępniamy na życzenie.',
+  },
 ];

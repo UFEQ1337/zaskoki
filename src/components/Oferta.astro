@@ -9,7 +9,7 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
     <div class="oferta__head" data-reveal>
       <span class="eyebrow">Oferta</span>
       <h2 class="section-title">Nasze atrakcje</h2>
-      <p class="oferta__sub">Kliknij zdjęcie, aby zobaczyć galerię.</p>
+      <p class="oferta__sub">Najedź na zdjęcie i kliknij „Szczegóły", aby zobaczyć pełne parametry.</p>
     </div>
 
     <div class="oferta__promo" data-reveal>
@@ -30,8 +30,44 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
   </div>
 </section>
 
+<!-- Dymek ze szczegółami (wspólny dla wszystkich kart) -->
+<div class="modal" id="szczegoly-modal" hidden>
+  <div class="modal__overlay" data-close></div>
+  <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button type="button" class="modal__close" data-close aria-label="Zamknij szczegóły">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+    </button>
+    <div class="modal__media">
+      <img id="modal-img" src="" alt="" />
+    </div>
+    <div class="modal__body">
+      <span class="modal__theme" id="modal-theme"></span>
+      <h3 class="modal__title" id="modal-title"></h3>
+      <p class="modal__desc" id="modal-desc"></p>
+
+      <ul class="modal__params" id="modal-params"></ul>
+
+      <div class="modal__certs">
+        <span class="modal__certs-label">Bezpieczeństwo:</span>
+        {firma.certyfikaty.map((c) => <span class="modal__cert">{c}</span>)}
+      </div>
+
+      <div class="modal__footer">
+        <div class="modal__price">
+          <span class="modal__price-val" id="modal-price"></span>
+          <span class="modal__price-unit">/ dzień</span>
+        </div>
+        <a class="btn btn--yellow" href="#kontakt" data-close>
+          Zamów
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-  .oferta { background: var(--c-cream); }
+  .oferta { background: transparent; }
   .oferta__head {
     text-align: center;
     margin-bottom: clamp(28px, 4vw, 44px);
@@ -85,131 +121,251 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
     margin: clamp(26px, 4vw, 38px) auto 0;
     max-width: 560px;
   }
-</style>
 
-<!-- Style GLightboxa — klasy generowane dynamicznie, więc globalne. -->
-<style is:global>
-  .glightbox-clean .gnext svg,
-  .glightbox-clean .gprev svg,
-  .glightbox-clean .gclose svg {
-    width: 22px;
-    height: 22px;
+  /* — Dymek / modal ze szczegółami — */
+  .modal[hidden] { display: none; }
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
   }
-
-  /* Mobile: GLightbox domyślnie chowa strzałki (zostaje sam swipe). Pokazujemy je jako pewny fallback. */
-  @media (max-width: 768px) {
-    .glightbox-container .gprev,
-    .glightbox-container .gnext {
-      position: fixed !important;
-      top: 50% !important;
-      bottom: auto !important;
-      transform: translateY(-50%) !important;
-      width: 46px !important;
-      height: 46px !important;
-      background: rgba(20, 15, 32, 0.55) !important;
-      border-radius: 50% !important;
-      z-index: 100000 !important;
-    }
-    .glightbox-container .gprev {
-      left: 12px !important;
-      right: auto !important;
-    }
-    .glightbox-container .gnext {
-      right: 12px !important;
-      left: auto !important;
-    }
+  .modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 15, 32, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(640px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 30px 70px rgba(20, 15, 32, 0.4);
+    animation: modal-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes modal-in {
+    from { transform: translateY(14px) scale(0.98); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  .modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--c-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  }
+  .modal__media {
+    background: #fff;
+    display: flex;
+    justify-content: center;
+  }
+  .modal__media img {
+    width: 100%;
+    height: auto;
+    max-height: 64vh;
+    object-fit: contain;
+    display: block;
+  }
+  .modal__body {
+    padding: 22px clamp(20px, 4vw, 30px) 26px;
+  }
+  .modal__theme {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--c-orange);
+  }
+  .modal__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(24px, 4vw, 30px);
+    letter-spacing: -0.5px;
+    margin: 2px 0 10px;
+  }
+  .modal__desc {
+    color: var(--c-gray);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 18px;
+  }
+  .modal__params {
+    list-style: none;
+    margin: 0 0 18px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px 22px;
+  }
+  /* Pozycje listy tworzone są w JS (bez hasha scope Astro) → :global. */
+  .modal__params :global(li) {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(42, 35, 66, 0.08);
+  }
+  .modal__params :global(li span) {
+    color: var(--c-gray);
+    font-size: 14.5px;
+  }
+  .modal__params :global(li strong) {
+    color: var(--c-ink);
+    font-weight: 800;
+    font-size: 14.5px;
+    text-align: right;
+  }
+  .modal__certs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 22px;
+  }
+  .modal__certs-label {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--c-gray);
+    margin-right: 2px;
+  }
+  .modal__cert {
+    background: var(--c-mint-soft);
+    color: var(--c-blue-strong);
+    font-weight: 800;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+  .modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .modal__price-val {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--c-orange);
+  }
+  .modal__price-unit {
+    font-size: 13px;
+    color: var(--c-gray);
+    font-weight: 700;
+    margin-left: 4px;
   }
 </style>
 
 <script>
-  // GLightbox ładowany leniwie — dopiero przy sekcji „Oferta".
-  // Karuzela kart to natywny scroll-snap
-  import 'glightbox/dist/css/glightbox.min.css';
+  // Dymek ze szczegółami — wypełniany z atrybutów data-* przycisków „Szczegóły".
+  function initSzczegoly() {
+    const modal = document.getElementById('szczegoly-modal');
+    if (!modal || modal.dataset.bound === '1') return;
+    modal.dataset.bound = '1';
 
-  let booted = false;
+    const dialog = modal.querySelector<HTMLElement>('.modal__dialog');
+    const imgEl = modal.querySelector<HTMLImageElement>('#modal-img');
+    const themeEl = modal.querySelector<HTMLElement>('#modal-theme');
+    const titleEl = modal.querySelector<HTMLElement>('#modal-title');
+    const descEl = modal.querySelector<HTMLElement>('#modal-desc');
+    const paramsEl = modal.querySelector<HTMLElement>('#modal-params');
+    const priceEl = modal.querySelector<HTMLElement>('#modal-price');
+    const closeBtn = modal.querySelector<HTMLButtonElement>('.modal__close');
+    if (!dialog || !imgEl || !themeEl || !titleEl || !descEl || !paramsEl || !priceEl || !closeBtn) return;
 
-  // Lekki kontroler natywnej karuzeli (scroll-snap): kropki + strzałki.
-  function initCarousel(el: HTMLElement) {
-    if (el.dataset.carouselBound === '1') return;
-    el.dataset.carouselBound = '1';
+    let lastFocus: HTMLElement | null = null;
 
-    const track = el.querySelector<HTMLElement>('[data-track]');
-    if (!track) return;
-    const slides = Array.from(track.querySelectorAll<HTMLElement>('.karta__slide'));
-    const dots = Array.from(el.querySelectorAll<HTMLElement>('[data-dot]'));
-    if (slides.length < 2) return;
+    const open = (btn: HTMLElement) => {
+      lastFocus = btn;
+      imgEl.src = btn.dataset.img ?? '';
+      imgEl.alt = btn.dataset.alt ?? '';
+      themeEl.textContent = btn.dataset.motyw ?? '';
+      titleEl.textContent = btn.dataset.nazwa ?? '';
+      descEl.textContent = btn.dataset.opis ?? '';
+      priceEl.textContent = btn.dataset.cena ?? '';
 
-    let current = 0;
-    const setActive = (i: number) => {
-      if (i === current) return;
-      current = i;
-      dots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting && e.intersectionRatio >= 0.6) {
-              setActive(slides.indexOf(e.target as HTMLElement));
-            }
-          }
-        },
-        { root: track, threshold: [0.6] }
+      let params: { label: string; value: string }[] = [];
+      try {
+        params = JSON.parse(btn.dataset.params ?? '[]');
+      } catch {
+        params = [];
+      }
+      paramsEl.replaceChildren(
+        ...params.map((p) => {
+          const li = document.createElement('li');
+          const s = document.createElement('span');
+          s.textContent = p.label;
+          const st = document.createElement('strong');
+          st.textContent = p.value;
+          li.append(s, st);
+          return li;
+        })
       );
-      slides.forEach((s) => io.observe(s));
-    } else {
-      track.addEventListener('scroll', () => {
-        setActive(Math.round(track.scrollLeft / track.clientWidth));
-      }, { passive: true });
-    }
 
-    const go = (dir: number) => {
-      const next = (current + dir + slides.length) % slides.length;
-      track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
     };
-    el.querySelector<HTMLElement>('[data-prev]')?.addEventListener('click', () => go(-1));
-    el.querySelector<HTMLElement>('[data-next]')?.addEventListener('click', () => go(1));
-  }
 
-  async function bootOferta() {
-    if (booted) return;
-    booted = true;
+    const close = () => {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      lastFocus?.focus();
+    };
 
-    document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const opener = target.closest<HTMLElement>('[data-szczegoly]');
+      if (opener) {
+        e.preventDefault();
+        open(opener);
+        return;
+      }
+      if (target.closest('[data-close]')) close();
+    });
 
-    const { default: GLightbox } = await import('glightbox');
-    GLightbox({
-      selector: '.glightbox',
-      loop: true,
-      touchNavigation: true,
-      zoomable: false, // bez zoomu zdjęcia => płynne przesuwanie palcem między zdjęciami na mobile
-      openEffect: 'fade',
-      closeEffect: 'fade',
+    document.addEventListener('keydown', (e) => {
+      if (modal.hidden) return;
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+      // Prosty focus-trap w obrębie dialogu.
+      if (e.key === 'Tab') {
+        const focusables = dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
   }
 
-  function watchOferta() {
-    const section = document.getElementById('oferta');
-    if (!section) return;
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
-        (entries, obs) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              obs.disconnect();
-              bootOferta();
-            }
-          }
-        },
-        { rootMargin: '300px 0px' }
-      );
-      io.observe(section);
-    } else {
-      bootOferta();
-    }
-  }
-
-  watchOferta();
-  document.addEventListener('astro:page-load', watchOferta);
+  initSzczegoly();
+  document.addEventListener('astro:page-load', initSzczegoly);
 </script>
