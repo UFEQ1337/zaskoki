@@ -24,8 +24,8 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
     </div>
 
     <p class="oferta__note" data-reveal>
-      Ceny od {firma.cenaOd} do {firma.cenaDo} zł / dzień. Dokładną wycenę i dostępność
-      potwierdzamy telefonicznie.
+      Każdą atrakcję wynajmiesz na 4 godziny lub cały dzień — ceny od {firma.cenaOd} zł.
+      Dokładną wycenę i dostępność potwierdzamy telefonicznie.
     </p>
   </div>
 </section>
@@ -53,9 +53,15 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
       </div>
 
       <div class="modal__footer">
-        <div class="modal__price">
-          <span class="modal__price-val" id="modal-price"></span>
-          <span class="modal__price-unit">/ dzień</span>
+        <div class="modal__prices">
+          <div class="modal__price modal__price--hot">
+            <span class="modal__price-label">4 h</span>
+            <span class="modal__price-val" id="modal-price-4h"></span>
+          </div>
+          <div class="modal__price">
+            <span class="modal__price-label">Cały dzień</span>
+            <span class="modal__price-val" id="modal-price-day"></span>
+          </div>
         </div>
         <a class="btn btn--yellow" href="#kontakt" data-close>
           Zamów
@@ -257,19 +263,42 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .modal__prices {
+    display: flex;
+    gap: 12px;
+  }
+  .modal__price {
+    display: flex;
+    flex-direction: column;
+    background: var(--c-cream);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    padding: 8px 15px;
+  }
+  .modal__price-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--c-gray);
   }
   .modal__price-val {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: 28px;
-    color: var(--c-orange);
+    font-size: 22px;
+    color: var(--c-ink);
+    line-height: 1.1;
   }
-  .modal__price-unit {
-    font-size: 13px;
-    color: var(--c-gray);
-    font-weight: 700;
-    margin-left: 4px;
+  .modal__price--hot {
+    background: var(--c-peach);
+    border-color: rgba(196, 77, 10, 0.28);
+  }
+  .modal__price--hot .modal__price-val {
+    color: var(--c-orange);
+    font-size: 26px;
   }
 </style>
 
@@ -286,9 +315,10 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
     const titleEl = modal.querySelector<HTMLElement>('#modal-title');
     const descEl = modal.querySelector<HTMLElement>('#modal-desc');
     const paramsEl = modal.querySelector<HTMLElement>('#modal-params');
-    const priceEl = modal.querySelector<HTMLElement>('#modal-price');
+    const price4hEl = modal.querySelector<HTMLElement>('#modal-price-4h');
+    const priceDayEl = modal.querySelector<HTMLElement>('#modal-price-day');
     const closeBtn = modal.querySelector<HTMLButtonElement>('.modal__close');
-    if (!dialog || !imgEl || !themeEl || !titleEl || !descEl || !paramsEl || !priceEl || !closeBtn) return;
+    if (!dialog || !imgEl || !themeEl || !titleEl || !descEl || !paramsEl || !price4hEl || !priceDayEl || !closeBtn) return;
 
     let lastFocus: HTMLElement | null = null;
 
@@ -299,7 +329,8 @@ import KartaDmuchanca from './KartaDmuchanca.astro';
       themeEl.textContent = btn.dataset.motyw ?? '';
       titleEl.textContent = btn.dataset.nazwa ?? '';
       descEl.textContent = btn.dataset.opis ?? '';
-      priceEl.textContent = btn.dataset.cena ?? '';
+      price4hEl.textContent = btn.dataset.cena4h ?? '';
+      priceDayEl.textContent = btn.dataset.cenadzien ?? '';
 
       let params: { label: string; value: string }[] = [];
       try {

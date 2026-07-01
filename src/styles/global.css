@@ -83,6 +83,15 @@ body {
   background-repeat: no-repeat;
 }
 
+/* Mobile: ta sama grafika tła co na desktopie, dopasowana pod wąski ekran. */
+@media (max-width: 760px) {
+  .site-bg {
+    /* Baner jest poziomy — na pionowym ekranie kotwiczymy górę, żeby pokazać
+       dekoracje zamiast samego pustego środka. */
+    background-position: center top !important;
+  }
+}
+
 img,
 svg {
   display: block;

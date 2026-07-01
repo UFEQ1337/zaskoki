@@ -18,7 +18,7 @@ export const faq: Pytanie[] = [
   {
     pytanie: 'Ile kosztuje wynajem?',
     odpowiedz:
-      'Ceny zaczynają się od 400 zł i sięgają 900 zł za dzień — w zależności od atrakcji. Przy wynajmie 3 atrakcji naraz dajemy −20% rabatu. Dojazd w obrębie naszego obszaru działania ustalamy indywidualnie.',
+      'Każdą atrakcję wynajmiesz na 4 godziny lub na cały dzień. Ceny za 4 h zaczynają się od 350 zł, a za cały dzień od 500 zł (do 700 zł — w zależności od atrakcji). Przy wynajmie 3 atrakcji naraz dajemy −20% rabatu. Dojazd w obrębie naszego obszaru działania ustalamy indywidualnie.',
   },
   {
     pytanie: 'Czy dmuchańce są bezpieczne?',

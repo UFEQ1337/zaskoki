@@ -11,7 +11,7 @@ porcją JavaScriptu.
 3. [Budowanie](#budowanie)
 4. [Wydajność (Lighthouse)](#wydajność-lighthouse)
 5. [Struktura](#struktura)
-6. [Najczęstsze edycje](#najczęstsze-edycje) — treści, cennik, zdjęcia, kolory, social
+6. [Najczęstsze edycje](#najczęstsze-edycje) — atrakcje/cennik, dodatki, zdjęcia, tło, logo, kolory
 7. [Kontakt](#kontakt)
 8. [SEO](#seo)
 9. [Deploy na Cloudflare](#deploy-na-cloudflare)
@@ -24,8 +24,8 @@ porcją JavaScriptu.
 | ------------------------ | -------------------------------------------------------------------------------- |
 | Framework                | [Astro](https://astro.build) (build statyczny, TypeScript, bez frameworka UI)    |
 | Przejścia stron          | wbudowane View Transitions (`<ClientRouter />`)                                  |
-| Karuzele zdjęć w kartach | natywny **scroll-snap CSS** (bez JS — niezawodne na iOS Safari)                   |
-| Podgląd zdjęć (lightbox) | [GLightbox](https://biati-digital.github.io/glightbox/) (ładowany leniwie)       |
+| Zdjęcia atrakcji         | pojedynczy baner na kartę (WebP, `object-fit: contain` — bez karuzeli)            |
+| Szczegóły atrakcji       | własny modal (dymek) z parametrami — lekki vanilla JS, dostępny z klawiatury      |
 | Animacje pojawiania się  | natywny `IntersectionObserver` + klasy CSS                                       |
 | Optymalizacja obrazów    | `astro:assets` → WebP, responsywne rozmiary, lazy loading, preload zdjęcia LCP   |
 | Fonty                    | Baloo 2 + Nunito, samohostowane (subset latin + latin-ext, `font-display: swap`) |
@@ -33,8 +33,9 @@ porcją JavaScriptu.
 | Akordeon FAQ             | natywny `<details>` — zero JS                                                    |
 | Mapa strony / robots     | `@astrojs/sitemap` + dynamiczny `robots.txt`                                     |
 
-GLightbox (podgląd zdjęć) doładowuje się dopiero, gdy sekcja „Oferta" zbliża się do ekranu —
-na starcie strona ładuje praktycznie sam HTML z wstawionym inline CSS, bez blokujących żądań.
+Bez zewnętrznych bibliotek JS do zdjęć — dymek ze szczegółami atrakcji to własny, lekki skrypt
+osadzony w komponencie. Na starcie strona ładuje praktycznie sam HTML z wstawionym inline CSS,
+bez blokujących żądań.
 
 ---
 
@@ -63,22 +64,23 @@ Na hosting trafia zawartość `dist/`.
 
 ## Wydajność (Lighthouse)
 
-Pomiar produkcyjny (Lighthouse, mediana z kilku przebiegów):
+Pomiar na wersji live (Lighthouse, https://zaskoki.ufeq.workers.dev/):
 
 | Kategoria          | 📱 Mobile | 🖥️ Desktop |
 | ------------------ | :-------: | :--------: |
-| **Performance**    |  **92**   |  **100**   |
+| **Performance**    |  **99**   |  **100**   |
 | **Accessibility**  |  **100**  |  **100**   |
 | **Best Practices** |  **100**  |  **100**   |
 | **SEO**            |  **100**  |  **100**   |
 
-Core Web Vitals: **CLS 0** (zero przeskoków układu) i **TBT 0 ms** (zero blokowania wątku) na
-obu wersjach. Mobilne LCP ~3,0 s pochodzi z dławionego „wolnego 4G" w teście laboratoryjnym —
-na realnym łączu (4G/5G/WiFi) zdjęcie hero ładuje się ~1–1,5 s.
+Core Web Vitals: **CLS ~0** (zero przeskoków układu) i **TBT 0 ms** (zero blokowania wątku) na
+obu wersjach. Desktop LCP ~0,5 s, mobilne LCP ~2,0 s (element LCP to zdjęcie hero). Brakujący
+1 pkt Performance na mobile wynika z dławionego „wolnego 4G" w teście — na realnym łączu jeszcze
+szybciej.
 
 Zastosowane optymalizacje: cały CSS inline (zero blokad renderu), fonty w subsecie
-latin + latin-ext, preload zdjęcia hero (element LCP), karuzela na natywnym scroll-snap
-zamiast biblioteki JS.
+latin + latin-ext, preload zdjęcia hero (element LCP), zdjęcia atrakcji jako pojedyncze
+bannery (WebP, responsywne rozmiary) zamiast karuzeli z biblioteką JS.
 
 > Test lokalnie: `npx lighthouse https://zaskoki.ufeq.workers.dev/ --view`
 > (dla wersji desktop dodaj `--preset=desktop`).
@@ -93,16 +95,18 @@ zaskok/
 ├── public/                 # kopiowane 1:1 (favicon, og-image, _headers)
 └── src/
     ├── assets/             # zdjęcia (optymalizowane przy buildzie)
-    │   ├── dmuchance/       #   – zdjęcia atrakcji
-    │   └── zycie/           #   – zdjęcia w sekcji „O nas"
+    │   ├── dmuchance/       #   – bannery atrakcji (*-banner.jpg) + hero (zyziu-1.jpg)
+    │   ├── zycie/           #   – zdjęcia dodatków (popcorn, wata, slush, piana…)
+    │   ├── bg-party.jpg     #   – tło strony (motyw wizytówki)
+    │   └── logo.png         #   – logo zaSKOKI.pl (nagłówek, stopka, favicon)
     ├── data/               # ⭐ TREŚCI DO EDYCJI
-    │   ├── dmuchance.ts     #   – atrakcje: nazwa, wymiary, wiek, cena, zdjęcia
+    │   ├── dmuchance.ts     #   – atrakcje (cennik 4h/dzień, wymiary, parametry) + dodatki
     │   ├── faq.ts           #   – pytania i odpowiedzi
-    │   └── firma.ts         #   – telefon, miejscowości, rabat, social
-    ├── layouts/Layout.astro # <head>, meta, Open Graph, dane SEO (JSON-LD)
-    ├── components/          # sekcje (Header, Hero, Oferta, FAQ, Kontakt…)
+    │   └── firma.ts         #   – telefon, miejscowości, rabat, certyfikaty, social
+    ├── layouts/Layout.astro # <head>, meta, Open Graph, dane SEO (JSON-LD), tło strony
+    ├── components/          # sekcje (Header, Hero, ONas, Oferta, Dodatki, Pakiety, FAQ, Kontakt…)
     ├── pages/               # index.astro, 404.astro, robots.txt.ts
-    └── styles/global.css    # ⭐ KOLORY, fonty, odstępy (zmienne CSS)
+    └── styles/global.css    # ⭐ KOLORY, fonty, odstępy, tło (zmienne CSS)
 ```
 
 ---
@@ -112,31 +116,47 @@ zaskok/
 ### 🛝 Atrakcje i cennik → `src/data/dmuchance.ts`
 
 Jedyne miejsce, które edytujesz, by dodać lub zmienić dmuchańca — karty generują się z tej
-listy. Pola wpisu:
+listy. Cena jest podwójna: **za 4 h** i **za cały dzień** (tańsza, 4-godzinna jest wyróżniona
+na karcie i w dymku). Pola wpisu:
 
 ```ts
 {
   id: 'zyziu',                       // unikalny, mała litera, bez spacji
   nazwa: 'ZYZIU',
-  motyw: 'Zjeżdżalnia Auta · Zygzak',
-  akcent: '#E2342B',                 // kolor podtytułu
-  wymiary: 'Zjazd 4,7 m',
+  motyw: 'Zamek z motywem Bajki Auta',
+  akcent: '#D62719',                 // kolor podtytułu
+  wymiary: '8,5 × 4,6 m',            // skrót pokazywany w „pill"
   liczbaDzieci: 'do 6 dzieci',
   wiek: 'Dzieci 4+',
-  cena: '900 zł',
-  zdjecia: [
-    { src: zyziu1, alt: 'opis zdjęcia (dostępność/SEO)' },
+  cena4h: '550 zł',                  // cena za 4 godziny
+  cenaDzien: '700 zł',               // cena za cały dzień
+  opis: 'Krótki opis do dymka „Szczegóły".',
+  parametry: [                       // pełna specyfikacja w dymku „Szczegóły"
+    { label: 'Długość × szerokość', value: '8,5 × 4,6 m' },
+    { label: 'Wysokość', value: '7,2 m' },
+    // …dowolne kolejne pary label/value
   ],
+  zdjecie: { src: zyziuBanner, alt: 'opis zdjęcia (dostępność/SEO)' },
 }
 ```
 
-**Nowa atrakcja:** wrzuć zdjęcia do `src/assets/dmuchance/`, zaimportuj je na górze pliku
-(są przykłady) i dopisz obiekt do tablicy.
+**Nowa atrakcja:** wrzuć baner do `src/assets/dmuchance/`, zaimportuj go na górze pliku
+(są przykłady) i dopisz obiekt do tablicy `dmuchance`.
 
-### 📞 Telefon, miejscowości, rabat, social → `src/data/firma.ts`
+**Certyfikaty** (PN-EN 14960, Atest, DTR, OC) są wspólne dla wszystkich atrakcji — edytujesz je
+raz w `firma.certyfikaty` (`src/data/firma.ts`); pokazują się na kartach i w dymku.
+
+### 🎪 Dodatkowa oferta → `dodatki` w `src/data/dmuchance.ts`
+
+Sekcja „Dodatkowa oferta" (popcorn, wata cukrowa, slush, piana party…) generuje się z tablicy
+`dodatki` w tym samym pliku. Wpis ma `nazwa`, `podpis`, `cenaOd` oraz `zdjecie` + `alt`
+(gdy brak `zdjecie`, kafelek pokazuje `emoji` na tle `kolor`).
+
+### 📞 Telefon, miejscowości, rabat, certyfikaty, social → `src/data/firma.ts`
 
 Jedno miejsce na dane firmy — zmiana aktualizuje nagłówek, hero, kontakt, stopkę i dane SEO.
-Tu też wpisujesz linki do Facebooka/Instagrama (`social`) — ikonki w stopce pojawią się
+Tu edytujesz też listę **miejscowości** (sekcja „O nas" i stopka), **certyfikaty** (badge na
+kartach i w dymku) oraz linki do Facebooka/Instagrama (`social`) — ikonki w stopce pojawią się
 **tylko, gdy pole ma wartość**.
 
 ### ❓ Pytania (FAQ) → `src/data/faq.ts`
@@ -150,8 +170,17 @@ Dwie metody podmiany w `src/assets/dmuchance/` i `src/assets/zycie/`:
 - **Najprościej:** podmień pliki, zachowując te same nazwy — nic więcej nie trzeba.
 - **Własne nazwy:** wrzuć nowe pliki i popraw importy na górze `src/data/dmuchance.ts`.
 
-Astro samo zrobi WebP/AVIF i miniatury. Wrzucaj zdjęcia w dużej rozdzielczości (1200–1600 px);
-kadr 4:3 robi się sam.
+Astro samo zrobi WebP i responsywne rozmiary. Wrzucaj zdjęcia w dużej rozdzielczości
+(1200–1600 px). Bannery atrakcji pokazywane są w **całości** (`object-fit: contain`), więc mogą
+być poziome lub pionowe; zdjęcia dodatków są kadrowane do 4:3.
+
+### 🖼️ Tło strony i logo
+
+- **Tło:** `src/assets/bg-party.jpg` — podmień plik (ta sama nazwa), aby zmienić grafikę tła.
+  Na desktopie wypełnia ekran; na telefonie (`≤ 760 px`) jest zakotwiczone do góry — reguła
+  w `global.css` (`.site-bg`).
+- **Logo:** `src/assets/logo.png` (przezroczysty). Favicony (`public/favicon*`,
+  `apple-touch-icon.png`) generowane są z logo — po jego zmianie warto je odtworzyć.
 
 ### 🎨 Kolory i fonty → `src/styles/global.css`
 

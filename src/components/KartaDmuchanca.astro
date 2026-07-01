@@ -31,7 +31,8 @@ const duze = await getImage({ src: d.zdjecie.src, width: 900, format: 'webp' });
         data-nazwa={d.nazwa}
         data-motyw={d.motyw}
         data-opis={d.opis}
-        data-cena={d.cena}
+        data-cena4h={d.cena4h}
+        data-cenadzien={d.cenaDzien}
         data-img={duze.src}
         data-alt={d.zdjecie.alt}
         data-params={JSON.stringify(d.parametry)}
@@ -66,11 +67,17 @@ const duze = await getImage({ src: d.zdjecie.src, width: 900, format: 'webp' });
     </div>
 
     <div class="karta__footer">
-      <div class="karta__price">
-        <div class="karta__price-val">{d.cena}</div>
-        <div class="karta__price-unit">/ dzień</div>
+      <div class="karta__prices">
+        <div class="karta__price karta__price--hot">
+          <span class="karta__price-label">4 h</span>
+          <span class="karta__price-val">{d.cena4h}</span>
+        </div>
+        <div class="karta__price">
+          <span class="karta__price-label">Cały dzień</span>
+          <span class="karta__price-val">{d.cenaDzien}</span>
+        </div>
       </div>
-      <a href="#kontakt" class="btn btn--yellow">
+      <a href="#kontakt" class="btn btn--yellow karta__order">
         Zamów
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2A2342" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
       </a>
@@ -185,21 +192,48 @@ const duze = await getImage({ src: d.zdjecie.src, width: 900, format: 'webp' });
   .karta__footer {
     margin-top: auto;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .karta__prices {
+    display: flex;
+    gap: 10px;
+  }
+  .karta__price {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: var(--c-cream);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    padding: 9px 13px;
+  }
+  .karta__price-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--c-gray);
   }
   .karta__price-val {
     font-family: var(--font-head);
     font-weight: 800;
-    font-size: 25px;
-    color: var(--c-orange);
-    line-height: 1;
+    font-size: 21px;
+    color: var(--c-ink);
+    line-height: 1.1;
   }
-  .karta__price-unit {
-    font-size: 13px;
-    color: var(--c-gray);
-    font-weight: 700;
+  /* Wyróżniona, tańsza opcja (4 h) */
+  .karta__price--hot {
+    background: var(--c-peach);
+    border-color: rgba(196, 77, 10, 0.28);
+    box-shadow: 0 8px 18px rgba(196, 77, 10, 0.12);
+  }
+  .karta__price--hot .karta__price-val {
+    color: var(--c-orange);
+    font-size: 25px;
+  }
+  .karta__order {
+    width: 100%;
   }
 
   /* Dotyk (brak hovera): nakładka i przycisk zawsze widoczne */

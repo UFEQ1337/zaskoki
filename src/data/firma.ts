@@ -49,8 +49,8 @@ export const firma = {
     badge: "Trzeci wynajem −20%",
   },
 
-  cenaOd: 400,
-  cenaDo: 900,
+  cenaOd: 350,
+  cenaDo: 700,
 } as const;
 
 export type Firma = typeof firma;

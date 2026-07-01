@@ -30,10 +30,11 @@ export interface Dmuchaniec {
   nazwa: string;
   motyw: string;
   akcent: string;
-  wymiary: string; // skrót pokazywany w „pill" (np. wysokość zjazdu)
+  wymiary: string; // skrót pokazywany w „pill" (np. gabaryt dł. × szer.)
   liczbaDzieci: string;
   wiek: string;
-  cena: string;
+  cena4h: string; // cena za 4 godziny
+  cenaDzien: string; // cena za cały dzień
   opis: string; // 1–2 zdania do dymka ze szczegółami
   parametry: Parametr[]; // pełna specyfikacja techniczna w modalu
   zdjecie: Zdjecie; // jedno zdjęcie = okładka karty
@@ -43,59 +44,62 @@ export const dmuchance: Dmuchaniec[] = [
   {
     id: 'zyziu',
     nazwa: 'ZYZIU',
-    motyw: 'Zjeżdżalnia Auta · Zygzak',
+    motyw: 'Zamek z motywem Bajki Auta',
     akcent: '#D62719',
-    wymiary: 'Zjazd 4,7 m',
+    wymiary: '8,5 × 4,6 m',
     liczbaDzieci: 'do 6 dzieci',
     wiek: 'Dzieci 4+',
-    cena: '900 zł',
+    cena4h: '550 zł',
+    cenaDzien: '700 zł',
     opis:
-      'Kolorowa dmuchana zjeżdżalnia w motywie wyścigowych aut. Długi, bezpieczny zjazd i mnóstwo frajdy dla małych kierowców.',
+      'Kolorowa dmuchana zjeżdżalnia z zamkiem w motywie wyścigowych aut. Długi, bezpieczny zjazd i mnóstwo frajdy dla małych kierowców.',
     parametry: [
-      { label: 'Wymiary', value: '6 × 4 m' },
-      { label: 'Wysokość zjazdu', value: '4,7 m' },
+      { label: 'Długość × szerokość', value: '8,5 × 4,6 m' },
+      { label: 'Wysokość', value: '7,2 m' },
       { label: 'Pojemność', value: 'do 6 dzieci naraz' },
       { label: 'Wiek', value: 'od 4 lat' },
       { label: 'Zasilanie', value: '230 V — dmuchawa w zestawie' },
-      { label: 'Wymagane miejsce', value: 'min. 7 × 5 m, równe podłoże' },
+      { label: 'Wymagane miejsce', value: 'min. 10 × 6 m, równe podłoże' },
     ],
     zdjecie: { src: zyziuBanner, alt: 'Dmuchana zjeżdżalnia ZYZIU (motyw aut) – baner z ceną i wymiarami' },
   },
   {
     id: 'steve',
     nazwa: 'STEVE',
-    motyw: 'Zjeżdżalnia Minecraft',
+    motyw: 'Zamek z motywem Minecraft',
     akcent: '#2E7D26',
-    wymiary: 'Zjazd 3,2 m',
+    wymiary: '6,5 × 3,9 m',
     liczbaDzieci: 'do 5 dzieci',
     wiek: 'Dzieci 4+',
-    cena: '700 zł',
+    cena4h: '450 zł',
+    cenaDzien: '590 zł',
     opis:
-      'Zjeżdżalnia w klimacie Minecraft — uwielbiana przez dzieci i nastolatków. Solidna konstrukcja i wysoki zjazd.',
+      'Zjeżdżalnia z zamkiem w klimacie Minecraft — uwielbiana przez dzieci i nastolatków. Solidna konstrukcja i wysoki zjazd.',
     parametry: [
-      { label: 'Wymiary', value: '8 × 4 m' },
-      { label: 'Wysokość zjazdu', value: '3,2 m' },
+      { label: 'Długość × szerokość', value: '6,5 × 3,9 m' },
+      { label: 'Wysokość', value: '5,4 m' },
       { label: 'Pojemność', value: 'do 5 dzieci naraz' },
       { label: 'Wiek', value: 'od 4 lat' },
       { label: 'Zasilanie', value: '230 V — dmuchawa w zestawie' },
-      { label: 'Wymagane miejsce', value: 'min. 9 × 5 m, równe podłoże' },
+      { label: 'Wymagane miejsce', value: 'min. 8 × 5 m, równe podłoże' },
     ],
     zdjecie: { src: steveBanner, alt: 'Dmuchana zjeżdżalnia STEVE (styl Minecraft) – baner z ceną i wymiarami' },
   },
   {
     id: 'bobi',
     nazwa: 'BOBI',
-    motyw: 'Zjeżdżalnia Budowlana',
+    motyw: 'Zamek z motywem Boba Budowniczego',
     akcent: '#C44D0A',
-    wymiary: 'Zjazd 4 m',
+    wymiary: '7,5 × 4,2 m',
     liczbaDzieci: 'do 6 dzieci',
     wiek: 'Dzieci 4+',
-    cena: '800 zł',
+    cena4h: '480 zł',
+    cenaDzien: '650 zł',
     opis:
-      'Zjeżdżalnia o tematyce budowlanej z dużą powierzchnią do wspinania i zjeżdżania — hit każdej imprezy.',
+      'Zjeżdżalnia z zamkiem o tematyce budowlanej (Bob Budowniczy) — duża powierzchnia do wspinania i zjeżdżania, hit każdej imprezy.',
     parametry: [
-      { label: 'Wymiary', value: '8 × 5 m' },
-      { label: 'Wysokość zjazdu', value: '4 m' },
+      { label: 'Długość × szerokość', value: '7,5 × 4,2 m' },
+      { label: 'Wysokość', value: '6,4 m' },
       { label: 'Pojemność', value: 'do 6 dzieci naraz' },
       { label: 'Wiek', value: 'od 4 lat' },
       { label: 'Zasilanie', value: '230 V — dmuchawa w zestawie' },
@@ -111,7 +115,8 @@ export const dmuchance: Dmuchaniec[] = [
     wymiary: 'Rozmiar 3 × 3 m',
     liczbaDzieci: 'do 4 graczy',
     wiek: 'Każdy wiek',
-    cena: '400 zł',
+    cena4h: '350 zł',
+    cenaDzien: '500 zł',
     opis:
       'Dmuchany dart piłkarski — kopiesz piłką w wielką tarczę na rzepy. Świetna zabawa dla dzieci i dorosłych.',
     parametry: [
@@ -144,7 +149,7 @@ export const dodatki: Dodatek[] = [
     id: 'zamki',
     nazwa: 'Zamki dmuchane',
     podpis: 'Zjeżdżalnie i dmuchane place zabaw',
-    cenaOd: 'od 400 zł',
+    cenaOd: 'od 450 zł',
     zdjecie: lifeRainbow,
     alt: 'Roześmiane dziecko z rękami w górze — radość z dmuchanych zabaw',
   },
@@ -176,7 +181,7 @@ export const dodatki: Dodatek[] = [
     id: 'dart',
     nazwa: 'Dart',
     podpis: 'Piłkarska tarcza na rzepy — FOOD DART',
-    cenaOd: 'od 400 zł',
+    cenaOd: 'od 350 zł',
     zdjecie: lifeSoccer,
     alt: 'Dziecko kopiące piłkę — gra w dmuchany dart piłkarski',
   },
